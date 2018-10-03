@@ -13,6 +13,11 @@ import javax.persistence.ManyToMany;
 import org.springframework.security.core.GrantedAuthority;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 /**
@@ -25,6 +30,8 @@ import lombok.Data;
 
 @Entity
 @Data
+@EqualsAndHashCode(exclude = {"users"}) 
+@ToString(exclude = "users")
 public class Role {
 
 	@Id

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.spotify.assessment.domain.Role;
@@ -16,6 +17,7 @@ import com.spotify.assessment.repositories.RoleRepository;
 import com.spotify.assessment.repositories.StockRepository;
 import com.spotify.assessment.repositories.UserRepository;
 import com.spotify.assessment.service.RestStockReader;
+import com.spotify.assessment.service.UserService;
 
 @Component
 public class DatabaseLoader implements CommandLineRunner {
@@ -28,6 +30,9 @@ public class DatabaseLoader implements CommandLineRunner {
 	
 	@Autowired 
 	RestStockReader stockReader;
+	
+	 @Autowired
+	 private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
 	public DatabaseLoader(UserRepository userRepository, RoleRepository roleRepository, StockRepository stockRepository) {
@@ -45,18 +50,38 @@ public class DatabaseLoader implements CommandLineRunner {
 		user = this.roleRepository.save(user);
 		admin = this.roleRepository.save(admin);
 		
-		Set<User> users = new HashSet<User>();
+		Set<User> nonAdminUsers = new HashSet<User>();
+		Set<User> adminUsers = new HashSet<User>();
 		
+		User adminUser = new User("Admin", "JaggedEdge", "admin@gmail.com");
 		User frodo = new User("Frodo Baggins", "LordOftheRing", "frodo@gmail.com");
+		
 		this.userRepository.save(frodo);
+		this.userRepository.save(adminUser);
+		
+		frodo = this.userRepository.findById(frodo.getUserId()).orElse(null);
+		adminUser = this.userRepository.findById(adminUser.getUserId()).orElse(null);
+		
+		nonAdminUsers.add(frodo);
+		user.setUsers(nonAdminUsers);
+		
+		adminUsers.add(adminUser);		
+		admin.setUsers(adminUsers);
+		
+		Set<Role> nonAdminRoles = new HashSet<Role>();
+		nonAdminRoles.add(user);
+		frodo.setRoles(nonAdminRoles);
+		
+		Set<Role> adminRoles = new HashSet<Role>();		
+		adminRoles.add(admin);
+		adminUser.setRoles(adminRoles);
+		
+		frodo.setPassword(bCryptPasswordEncoder.encode(frodo.getPassword()));
+		adminUser.setPassword(bCryptPasswordEncoder.encode(adminUser.getPassword()));
+		frodo = this.userRepository.save(frodo);
+		adminUser = this.userRepository.save(adminUser);
 		
 		
-		frodo = userRepository.findById(frodo.getUserId()).orElse(null);
-		users.add(frodo);
-		user.setUsers(users);
-		Set<Role> roles = new HashSet<Role>();
-		roles.add(user);
-		frodo.setRoles(roles);
 //		List<Stock> stocks = stockReader.executeRequest();
 		List<Stock> stocks = new ArrayList<Stock>();
 	

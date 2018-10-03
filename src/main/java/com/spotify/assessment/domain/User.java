@@ -18,8 +18,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 /**
@@ -31,6 +39,9 @@ import lombok.Data;
  */
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"account", "roles"})
+
+@ToString(exclude = {"account", "roles"})
 public class User implements UserDetails {
 
 	
@@ -64,19 +75,30 @@ public class User implements UserDetails {
 //    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 	
-	private String [] authorities;
+	
+	 
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List <GrantedAuthority> authorities = new ArrayList<>();
-		this.roles.stream().map(role -> authorities.add(new SimpleGrantedAuthority(role.getRole())));
+		List <GrantedAuthority> authorityList = this.roles.stream().map(role -> 
+		(new SimpleGrantedAuthority(role.getRole())))
+		.collect(Collectors.toList());
 		
-		return authorities;
+		return authorityList;
 	}
 
 	public User(String name, String password, String email) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
+	}
+	
+	public static User create(User user) {
+        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
+                new SimpleGrantedAuthority(role.getRole())
+        ).collect(Collectors.toList());
+        
+        return new User(user.getEmail(), user.getPassword(), authorities);
 	}
 	
 	@Override
