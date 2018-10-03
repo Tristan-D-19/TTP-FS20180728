@@ -15,11 +15,11 @@ import com.spotify.assessment.domain.Account;
 @Transactional
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-	public List<Stock> findBySymbol(String symbol);
+	Stock findBySymbol(String symbol);
 	
 	public List<Stock> findByVolume(int volume);
 	
 	public List<Stock> findByLastSalePrice(double lastsaleprice);
 	
-	List<Stock> findByAccount(List <Account> account);
+	List<Stock> findByAccount(List<?> account);
 }

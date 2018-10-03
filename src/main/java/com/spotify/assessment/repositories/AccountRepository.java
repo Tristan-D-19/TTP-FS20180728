@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-	List<Account> findByUser(User user);
+	Account findByUser(User user);
 	
 	List<Account> findByStocks(List<Stock> stocks);
 }

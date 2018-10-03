@@ -22,7 +22,6 @@ import lombok.Data;
  * This domain model represents a user's account to perform money transactions 
  *
  */
-
 @Data
 @Entity
 public class Account {
@@ -39,4 +38,7 @@ public class Account {
 	@ManyToMany(cascade=CascadeType.ALL)
 	private List <Stock> stocks;
 	
+	public Account(User user) {
+		this.user = user;
+	}
 }

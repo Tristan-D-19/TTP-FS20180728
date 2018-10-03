@@ -1,4 +1,4 @@
-package com.spotify.assessement.controller;
+package com.spotify.assessment.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 

@@ -1,35 +1,54 @@
 package com.spotify.assessment.domain;
 
-import javax.persistence.Column;
+import java.util.Collection;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import lombok.Data;
 
 
 /**
- * 
- * @author Tristan
- *This class represents user roles for use with spring security. 
+ * This class represents user roles for use with spring security. 
  *A role grants a user certain access, depending on the role.
+ * @author Tristan
+ *
  */
 
-@Data
+
 @Entity
+@Data
 public class Role {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long roleId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+    private Long roleId;
 	
 	private String role;
 	
 	private int roleAccess;
 	
+	@ManyToMany(cascade = {CascadeType.ALL})
+	private Set<User> users;
+	
+	
 	public Role(String role, int roleAccess) {
 		this.role = role;
 		this.roleAccess = roleAccess;
 	}
+
+
+	public Role(String role2) {
+		this.role = role2;
+	}
+
+
+	
 }

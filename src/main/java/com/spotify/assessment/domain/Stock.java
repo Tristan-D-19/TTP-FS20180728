@@ -14,21 +14,33 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
+/**
+ * This class reperesents a stock pulled from IEXDATA's API
+ * each stock is identified by their symbol. 
+ * @author Tristan
+ */
+
+
 @Data
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stock {
 
 @Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long stockId;
-
 private String symbol;
 
 private double lastSalePrice;
 
 private int volume;
 
+
 @ManyToMany(cascade=CascadeType.ALL)
 private List <Account> account;
+
+public Stock(String symbol,double lastSalePrice2, int volume2) {
+	this.lastSalePrice = lastSalePrice2;
+	this.volume = volume2;
+	this.symbol = symbol;
+	}
+
 }

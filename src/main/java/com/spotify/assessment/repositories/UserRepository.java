@@ -8,12 +8,13 @@ import org.springframework.stereotype.Repository;
 import com.spotify.assessment.domain.User;
 import java.lang.String;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	List<User> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 	
 	List<User> findByName(String name);
 }

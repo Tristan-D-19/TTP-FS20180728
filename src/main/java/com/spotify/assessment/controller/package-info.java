@@ -5,4 +5,4 @@
  * @author Tristan
  *
  */
-package com.spotify.assessement.controller;
+package com.spotify.assessment.controller;
