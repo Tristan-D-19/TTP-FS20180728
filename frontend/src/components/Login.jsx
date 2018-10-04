@@ -1,5 +1,9 @@
 import React, {Component} from 'react'
 import { Alert, Button, Jumbotron,  Form, Label, Input, FormGroup, ControlLabel, HelpBlock, Col } from 'reactstrap';
+import { login } from '../utils/APIHelper';
+import './Login.css';
+import { Link } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../constants';
 
 
 
@@ -29,21 +33,28 @@ export default class Login extends Component {
    const {password, email } = this.state;
    console.log(password);
    console.log(email);
+
    if (email && password) {
-    await fetch(`/auth/login/`, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify( {email:email, password:password}),
-          }).then(() => {
-          
+   login(email, password)
+    .then(response => {
+        localStorage.setItem(ACCESS_TOKEN, response.accessToken);
+        this.props.onLogin();
+        this.props.history.push("/");
+    }).catch( error => {
+        if(error.status === 401) {
+          let description = 'Your Username or Password is incorrect. Please try again!';
 
-          });
-    }
-
+                console.log(description);
+                           
+        } else {               
+                let description = 'Sorry! Something went wrong. Please try again!'
+                console.log(description);
+                
+                
+          }
+      });
   }
+}
   render() {
   
     return (

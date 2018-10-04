@@ -78,6 +78,8 @@ public class DatabaseLoader implements CommandLineRunner {
 		
 		frodo.setPassword(bCryptPasswordEncoder.encode(frodo.getPassword()));
 		adminUser.setPassword(bCryptPasswordEncoder.encode(adminUser.getPassword()));
+		
+		
 		frodo = this.userRepository.save(frodo);
 		adminUser = this.userRepository.save(adminUser);
 		

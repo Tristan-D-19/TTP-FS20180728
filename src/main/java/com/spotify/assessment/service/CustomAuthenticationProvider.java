@@ -27,7 +27,7 @@ import com.spotify.assessment.repositories.UserRepository;
 
 
 
-//@Component("authManager")
+@Component("authManager")
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

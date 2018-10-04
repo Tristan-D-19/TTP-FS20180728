@@ -3,13 +3,7 @@ import { Button, ButtonGroup, Container, Table, CheckBox, Form, FormGroup, Input
 import AppNavbar from './AppNavBar';
 import { Link } from 'react-router-dom';
 
-function BuyStock(props){
-  return (
-    <Button size="sm" color="primary" type="button" id="buy-button" onClick={props.toggle}>buy</Button>
-  )
-}
 class StockList extends Component {
-
 
   constructor(props) {
     super(props);
@@ -20,23 +14,10 @@ class StockList extends Component {
     this.close = this.close.bind(this);
   }
 
-  toggle(symbol) {   
-    console.log(symbol)
-    this.setState({
-      modal: !this.state.modal,
-      symbol:symbol
-    });
-  
-   
-  }
 
-  close(){
-    this.setState({
-      modal: !this.state.modal,
-  })
-}
+
+
   onclick(symbol){ 
-   
    
     this.setState({symbol:symbol})
   }
@@ -44,7 +25,7 @@ class StockList extends Component {
   componentDidMount() {
     this.setState({isLoading: true});
 
-    fetch('api/stocks/all')
+    fetch('api/user/account/')
       .then(response => response.json())
       .then(data => this.setState({stocks: data, isLoading: false}));
   }
@@ -70,11 +51,6 @@ console.debug(response);
 
   render() {
     const {stocks, isLoading} = this.state;
-    const {isAuthenticated} = this.props;
-   let buyStock;
-    if(isAuthenticated){
-      buyStock = <BuyStock onClick={this.toggle.bind(this, this.state.symbol)} />
-    }
 
     if (isLoading) {
       return <p>Loading...</p>;
@@ -88,8 +64,7 @@ console.debug(response);
         <td>{price}</td>
         <td>{volume}</td>
         <td>
-      
-          {buyStock}
+        <Button size="sm" color="primary" type="button" id={symbol} onClick={this.toggle.bind(this, symbol)}  >buy</Button>
           <Form onSubmit={this.onSubmit}>            
              <Modal isOpen={this.state.modal} toggle={this.toggle} className="modal-display">
           <ModalHeader toggle={this.toggle}>Buy Shares</ModalHeader>  

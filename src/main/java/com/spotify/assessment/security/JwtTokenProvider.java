@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.spotify.assessment.domain.User;
 import com.spotify.assessment.repositories.UserRepository;
 
 import java.util.Date;
@@ -29,14 +28,10 @@ public class JwtTokenProvider {
     @Value("${app.jwtExpirationInMs}")
     private int jwtExpirationInMs;
 
-    @Autowired
-    private UserRepository userRepository;
-    
     public String generateToken(Authentication authentication) {
 
-        String email = authentication.getName();
-        User userPrincipal = userRepository.findByEmail(email).orElse(null);
-        System.out.println("user is !" + email);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+      
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 

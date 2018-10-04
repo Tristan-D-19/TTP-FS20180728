@@ -36,12 +36,13 @@ import com.spotify.assessment.repositories.UserRepository;
 import com.spotify.assessment.security.JwtTokenProvider;
 import com.spotify.assessment.service.UserService;
 import com.spotify.assessment.validator.LoginRequest;
+import com.spotify.assessment.validator.RegisterRequest;
 import com.spotify.assessment.validator.UserValidator;
 
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
 	@Autowired
@@ -54,18 +55,18 @@ public class AuthController {
 	private UserValidator userValidator;
 	
 	@Autowired
-    JwtTokenProvider tokenProvider;
+    private JwtTokenProvider tokenProvider;
 	
 	@Autowired
 	private UserService userService;
 	
 	
 	@PostMapping("/login")
-    public ResponseEntity<?> loginUser( @Valid @RequestBody LoginRequest loginRequest,  final HttpServletRequest request) {    	
+    public ResponseEntity<?> loginUser( @Valid @RequestBody LoginRequest loginRequest) {    	
 	     
 		User user = userService.findUserByEmail(loginRequest.getEmail());
 		
-		System.out.println(user);
+//		System.out.println(user);
 		 Authentication auth = authManager.authenticate(
 	                new UsernamePasswordAuthenticationToken(
 	                        loginRequest.getEmail(),
@@ -75,10 +76,10 @@ public class AuthController {
 	 	
 	      
 	        SecurityContext sc = SecurityContextHolder.getContext();
-	        
 	        sc.setAuthentication(auth);
-	        HttpSession session = request.getSession(true);
-	        session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
+	        System.out.print(sc.getAuthentication().getName());
+//	        HttpSession session = request.getSession(true);
+//	        session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
 
 	        
 	        String jwt = tokenProvider.generateToken(auth);
@@ -88,35 +89,25 @@ public class AuthController {
 	
 	
 	@PostMapping({"/registration", "/register"})
-    public ResponseEntity<?> registration(@RequestBody Map<String, String> payload, BindingResult bindingResult, HttpSession session) {
-        String email = payload.get("email");
-        String password = payload.get("password");
-        String name = payload.get("name");
+    public ResponseEntity<?> registration(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult) {
+        
      
         //check for existing user
-        User userExists = userRepo.findByEmail(email).orElse(null);
+        User userExists = userRepo.findByEmail(registerRequest.getEmail()).orElse(null);
         if (userExists != null) {
-            bindingResult
-                    .rejectValue("email", "error.user",
-                            "There is already a user registered with the email provided");   
+           
             
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
+        SecurityContext sc = SecurityContextHolder.getContext();
+       
+     
+        System.out.println(registerRequest);
+         
+        User newUser = new User(registerRequest.getName(), registerRequest.getPassword(), registerRequest.getEmail());
         
-        
-        if (bindingResult.hasErrors()) { //error return to registration
-        	SecurityContext sc = SecurityContextHolder.getContext();
-        	Authentication auth = sc.getAuthentication();
-        	if(!auth.isAuthenticated())
-        		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        	else
-        		return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        
-        User newUser = new User(name, password, email);
-        
-            userRepo.save(newUser);
+            userService.createNewUser(newUser);
             return new ResponseEntity<>(HttpStatus.CREATED);
     }
 	

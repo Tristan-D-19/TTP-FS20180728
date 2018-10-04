@@ -2,12 +2,11 @@ package com.spotify.assessment.validator;
 
 
 import javax.validation.constraints.*;
+
 public class RegisterRequest {
     @NotBlank
     @Size(min = 4, max = 40)
     private String name;
-
-    
 
     @NotBlank
     @Size(max = 40)
@@ -18,6 +17,7 @@ public class RegisterRequest {
     @Size(min = 6, max = 20)
     private String password;
 
+    
     public String getName() {
         return name;
     }

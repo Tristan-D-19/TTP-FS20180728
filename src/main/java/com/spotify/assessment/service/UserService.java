@@ -15,6 +15,7 @@ import com.spotify.assessment.domain.Account;
 import com.spotify.assessment.domain.Role;
 import com.spotify.assessment.domain.Stock;
 import com.spotify.assessment.domain.User;
+import com.spotify.assessment.payload.UserProfile;
 import com.spotify.assessment.repositories.*;
 
 @Service
@@ -50,6 +51,9 @@ public class UserService {
 		roleRepository.save(userRole);
 		Account account = new Account(user);
 		account = accountRepository.save(account);
+		user.setAccount(account);
+		user = userRepository.save(user);
+		System.out.println(user);
 		return user;
 	}
 	public User createAdminUser(User user) {
@@ -109,5 +113,12 @@ public class UserService {
 	public User findById(Long userId) {	
 		User user = userRepository.findById(userId).orElse(null);
 		return user;
+	}
+	
+	public UserProfile getUser(Long userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		Account account = accountRepository.findByUser(user);
+		UserProfile userAccount = new UserProfile(user.getUserId(), user.getName(), user.getEmail(), account.getStocks(), account.getBalance());
+		return userAccount;
 	}
 }

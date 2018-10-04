@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -61,16 +62,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
     
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-	        return new BCryptPasswordEncoder();
-	 }
-
 	@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 	        return super.authenticationManagerBean();
 	 }
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	        return new BCryptPasswordEncoder();
+	 }
+
+
 	    
 	    @Bean
 	    public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -87,9 +90,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			         .and()
 			        .csrf()
 			        .disable()
-////			        .exceptionHandling()
-////			        .authenticationEntryPoint(unauthorizedHandler)
-//			        .and()
+			        .exceptionHandling()
+			        .authenticationEntryPoint(unauthorizedHandler)
+			        .and()
 			        .sessionManagement()
 			        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			         .and()
@@ -104,32 +107,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	                        "/**/*.css",
 	                        "/**/*.js")
 	                        .permitAll()
-	                .antMatchers("/auth/**").permitAll()	                             	                	               
-	                .antMatchers("/auth/registration","/auth/register").permitAll()
-//	                .antMatchers("/api/*").permitAll()
+	                .antMatchers("/api/auth/**").permitAll()	                             	                	               
+	                .antMatchers("/api/*").permitAll()
 	                .antMatchers(HttpMethod.GET, "/api/stocks/all").permitAll()
-	                .antMatchers("/auth/login").permitAll()	          
-	                .anyRequest().authenticated()           
-	                .and().httpBasic()
-	                ;
+	                .anyRequest().authenticated();
   
 	        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	    }
 
-	    @Autowired
-	    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {    	
-	    	 auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-	      
-	        }
+//	    @Autowired
+//	    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {    	
+//	    	 auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+//	      
+//	        }
 
-	 
-	    
 	    @Override
-	    public void configure(WebSecurity web) throws Exception {
-	        web
-	                .ignoring()
-	                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/webjars/**");
-	    } 
+	    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+	    	 auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	    }
+
 	    
 
 

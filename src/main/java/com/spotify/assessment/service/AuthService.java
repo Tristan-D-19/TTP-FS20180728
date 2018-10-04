@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.repositories.UserRepository;
+import com.spotify.assessment.security.UserPrincipal;
 
 
 @Service
@@ -24,9 +25,11 @@ public class AuthService implements UserDetailsService {
 	@Override
 	 @Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(username).orElse(null);
+		User user = userRepository.findByEmail(username) 
+		.orElseThrow(() ->
+        new UsernameNotFoundException("User not found with username or email : " + username));
 				
-		return User.create(user);
+		return UserPrincipal.create(user);
 	}
 		
 	 // This method is used by JWTAuthenticationFilter
@@ -36,7 +39,7 @@ public class AuthService implements UserDetailsService {
             () -> new UsernameNotFoundException("User not found with id : " + id)
         );
 
-        return User.create(user);
+        return UserPrincipal.create(user);
     }
 }
 	

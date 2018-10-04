@@ -25,8 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spotify.assessment.domain.Stock;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.repositories.StockRepository;
+import com.spotify.assessment.security.CurrentUser;
+import com.spotify.assessment.security.UserPrincipal;
 import com.spotify.assessment.service.RestStockReader;
 import com.spotify.assessment.service.UserService;
+import com.spotify.assessment.validator.AppConstants;
 
 @RestController
 @RequestMapping("/api/stocks")
@@ -42,9 +45,11 @@ public class StockController {
 	private StockRepository stockRepository;
 	
 	@GetMapping("/all")
-	public Collection<Stock> getAllStocks(){
+	public Collection<Stock> getAllStocks(@CurrentUser UserPrincipal currentUser, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
 //		List<Stock> stocks = stockReader.executeRequest();
 		List<Stock> stocks = stockRepository.findAll();
+//		stockRepository.findAll(page, size);
 	return stocks;
 	}
 	

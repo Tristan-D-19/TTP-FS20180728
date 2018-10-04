@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Button, Jumbotron,  Form, Label, Input, FormGroup, ControlLabel, HelpBlock, Col } from 'reactstrap';
 import './Register.css';
+import { register } from '../utils/APIHelper';
+import {
+    Route,
+    Redirect
+  } from "react-router-dom";
 
 export default class Register extends Component {
 
@@ -27,26 +32,37 @@ export default class Register extends Component {
         password1,
         password2, 
       } = this.state;
+      const  redirectToLogin = <Redirect
+            to={{
+        pathname: '/login',
+        state: { from: this.props.location }
+        }}
+        />
+        const  redirectToRegister = <Redirect
+        to={{
+    pathname: '/register',
+    state: { from: this.props.location }
+    }}
+    />
         this.setState({ submitted: true });
         console.log("submitting", submitted );
         console.log("state", this.state);
        
         const password = (password1 == password2) ? password2: null;
         if (name && email && password) {
-             await fetch(`/auth/register/`, {
-                     method: 'POST',
-                     headers: {
-                       'Accept': 'application/json',
-                       'Content-Type': 'application/json'
-                     },
-                     body: JSON.stringify(name, email, password),
-                   }).then(() => {
-                   
-
-                   });
-             }
+        register(name, email, password)
+        .then(response => {          
+                let description = "Thank you! You're successfully registered. Please Login to continue!";
+               this.props.onRegister();             
+       
+        }).catch(error => {
+            
+               let description = error.message || 'Sorry! Something went wrong. Please try again!';
+      
+           
+        });  
     }
-
+}
     render(){
      
      return (

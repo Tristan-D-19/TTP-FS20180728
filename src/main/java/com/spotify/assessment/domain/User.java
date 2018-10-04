@@ -53,7 +53,6 @@ public class User implements UserDetails {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private Long userId;
 	
 	@Column(name="name", nullable=false)
@@ -69,7 +68,7 @@ public class User implements UserDetails {
 	private String email;
 	
 	@Column(name="enabled")
-	private boolean enabled = false;
+	private boolean enabled = true;
 	
 	@ManyToMany(cascade = {CascadeType.ALL})
 //    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
