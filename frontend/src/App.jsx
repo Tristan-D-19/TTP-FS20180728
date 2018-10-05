@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { getCurrentUser } from './utils/APIHelper';
 import Home from './components/Home';
-import { BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, withRouter} from 'react-router-dom';
 import StockList from './components/StockList';
 import AppNavBar from './components/AppNavBar';
 import Register from './components/Register';
@@ -33,6 +33,7 @@ class App extends Component {
   handleLogin() {
     this.loadCurrentUser();
     this.props.history.push("/");
+    console.log("main");
     if (this.state.isAuthenticated) {
       return <Redirect to="/" />;
     }
@@ -44,6 +45,7 @@ class App extends Component {
       return <Redirect to="/login" />;
     }
   }
+
   loadCurrentUser() {
     this.setState({
       isLoading: true
@@ -83,20 +85,14 @@ class App extends Component {
   
   render() {
     
-
-  
-
     return (
       <div className="App-container">
-       
             
-          
       <div className="App-Header"> 
       <AppNavBar isAuthenticated={this.state.isAuthenticated} 
             currentUser={this.state.currentUser} 
             onLogout={this.handleLogout}/>
       </div>
-      <Router>
       <Switch>
         <Route path='/' exact={true} component={Home}/> 
         <Route exact path="/stocks" 
@@ -117,9 +113,9 @@ class App extends Component {
         <PrivateRoute authenticated={this.state.isAuthenticated} path="/logout" component={Home} handleLogout={this.handleLogout}></PrivateRoute>
                 <Route component={NotFound}></Route>      
       </Switch>
-    </Router>
+    
     </div>);
   }
 }
 
-export default App;
+export default withRouter(App);

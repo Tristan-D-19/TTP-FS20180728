@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, Button, Jumbotron,  Form, Label, Input, FormGroup, ControlLabel, HelpBlock, Col } from 'reactstrap';
+import { Alert, Button, Jumbotron,  Form, Label, ControlLabel, FormGroup, FormControl, HelpBlock, Col } from 'react-bootstrap';
 import './Register.css';
 import { register } from '../utils/APIHelper';
-import {
-    Route,
-    Redirect
-  } from "react-router-dom";
-
+import {  Redirect} from "react-router-dom";
+import {validateEmail, validatePassword, validateName} from '../utils/validators';
+import { Link } from 'react-router-dom';
 export default class Register extends Component {
 
     constructor(props) {
@@ -17,35 +15,33 @@ export default class Register extends Component {
           response: 0,
           date: "",
           loaded: false,
+          toLogin: false,
+          reload:false, 
+          nameError: {validationState:"", message:""},
+          passwordError: {validationState:"", message:""},
+          emailError: {validationState:"", message:""},
+          registrationError:{validationState:"",message:""}
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 
     //handle form submission
-    async handleSubmit(event) {
+     handleSubmit(event) {
         event.preventDefault();
-      const {submitted, response} = this.state;
+     
      const { 
        name, 
         email, 
         password1,
         password2, 
       } = this.state;
-      const  redirectToLogin = <Redirect
-            to={{
-        pathname: '/login',
-        state: { from: this.props.location }
-        }}
-        />
-        const  redirectToRegister = <Redirect
-        to={{
-    pathname: '/register',
-    state: { from: this.props.location }
-    }}
-    />
-        this.setState({ submitted: true });
-        console.log("submitting", submitted );
+    
+  
+            this.setState({ submitted: true }, () => {
+                console.log("submitting", this.state.submitted );
+              });
+       
         console.log("state", this.state);
        
         const password = (password1 == password2) ? password2: null;
@@ -53,44 +49,71 @@ export default class Register extends Component {
         register(name, email, password)
         .then(response => {          
                 let description = "Thank you! You're successfully registered. Please Login to continue!";
-               this.props.onRegister();             
-       
+               console.log("trying redirection", this.props.history);
+                this.props.history.push('/login');           
+       this.setState({toLogin:true});
         }).catch(error => {
-            
-               let description = error.message || 'Sorry! Something went wrong. Please try again!';
-      
-           
+            let description = error.message || 'Sorry! Something went wrong. Please try again!';
+            this.props.history.push("/register");           
+            this.setState({reload:true, registrationError:{validationState:"error", message:description} });         
         });  
     }
 }
     render(){
-     
+        const  redirectToLogin = <Redirect
+        to={{
+    pathname: '/login',
+    state: { from: this.props.location }
+    }}
+    />
+
+    const  redirectToRegister = <Redirect
+    to={{
+pathname: '/register',
+state: { from: this.props.location }
+}}
+/>
+        if (this.state.toLogin == true) {
+            return redirectToLogin
+          }
+          if (this.state.reLoad == true) {
+            return redirectToRegister;
+          }
+          
      return (
 <Jumbotron className="container"> 
-    <Form>
+    <form onSubmit={this.handleSubmit}>
         <h2>Register</h2>
         <FormGroup row>
             <Label for="name" sm={2}>Name</Label>
             <Col sm={10}>
-                <Input type="name" name="name" id="fullName" placeholder="Name eg. John Doe"  onChange={e => this.setState({name:e.target.value})} />
+                <FormControl type="name" name="name" id="fullName" placeholder="Name eg. John Doe"   onChange={e => this.setState({name:e.target.value, nameError:validateName(this.state.name)})}  />
             </Col>
         </FormGroup>
         <FormGroup row>
             <Label for="email" sm={2}>Email</Label>
             <Col sm={10}>
-                <Input type="email" name="email" id="email" placeholder="Email"  onChange={e => this.setState({email:e.target.value})} />
+                <FormControl type="email" name="email" id="email" placeholder="Email" 
+                 onChange={e => this.setState({email:e.target.value, emailError:validateEmail(this.state.email)})}  
+                 validationState={this.state.emailError.validationState}
+                 />
             </Col>
         </FormGroup>
         <FormGroup row>
             <Label for="password1" sm={2}>Password</Label>
             <Col sm={10}>
-                <Input type="password" name="password1" id="password1" placeholder="password"   onChange={e => this.setState({password1:e.target.value})}/>
+                <FormControl type="password" name="password1" id="password1"
+                 placeholder="password"   onChange={e => this.setState({password1:e.target.value, passwordError:validatePassword(this.state.password1, this.state.password2)})}
+                 validationState={this.state.passwordError.validationState}/>
             </Col>
         </FormGroup>
         <FormGroup row>
             <Label for="password2" sm={2}>Confirm Password</Label>
             <Col sm={10}>
-                <Input type="password" name="password2" id="password2" placeholder="confirm password"   onChange={e => this.setState({password2:e.target.value})}/>
+                <FormControl type="password" name="password2" id="password2"
+                 placeholder="confirm password"   onChange={e => this.setState({password2:e.target.value, passwordError:validatePassword(this.state.password1, this.state.password2)})}
+                 validationState={this.state.passwordError.validationState}
+                 />
             </Col>
         </FormGroup>
         <FormGroup>
@@ -98,7 +121,8 @@ export default class Register extends Component {
                 <Button type="submit" onClick={this.handleSubmit} >Register</Button>
             </Col>
         </FormGroup>
-    </Form>
+    </form>
+    Already registed? <Link to="/login">Login now!</Link>
 </Jumbotron>
 
         );
