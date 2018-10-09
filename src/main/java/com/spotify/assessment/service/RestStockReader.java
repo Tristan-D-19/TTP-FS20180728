@@ -1,5 +1,6 @@
 package com.spotify.assessment.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +34,9 @@ public class RestStockReader {
 		
 		ParameterizedTypeReference<List<Stock>> listOfStock = new ParameterizedTypeReference<List<Stock>>() {};
 
-		ResponseEntity<List<Stock>> stockBody = this.restTemplate.exchange(IEXURL, HttpMethod.GET, null, listOfStock);
-		List<Stock> stocks = stockBody.getBody();	
-		
+//		ResponseEntity<List<Stock>> stockBody = this.restTemplate.exchange(IEXURL, HttpMethod.GET, null, listOfStock);
+//		List<Stock> stocks = stockBody.getBody();	
+		List<Stock> stocks = new ArrayList<Stock>();
 		return stocks;
 	}
 }

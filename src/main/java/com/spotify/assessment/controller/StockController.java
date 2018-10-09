@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spotify.assessment.domain.Stock;
 import com.spotify.assessment.domain.User;
+import com.spotify.assessment.payload.ApiResponse;
+import com.spotify.assessment.payload.StockPurchaseRequest;
 import com.spotify.assessment.repositories.StockRepository;
 import com.spotify.assessment.security.CurrentUser;
 import com.spotify.assessment.security.UserPrincipal;
@@ -64,20 +67,20 @@ public class StockController {
 	}
 	
 	@PostMapping("/buy")
-	public ResponseEntity<?> buyStock(@RequestBody Map<String, String> payload){
+	public ResponseEntity<?> buyStock(@Valid @RequestBody StockPurchaseRequest stockPurchaseRequest, @CurrentUser UserPrincipal currentUser){
 		
-		String symbol = payload.get("symbol");
-		String v = payload.get("volume");
-		int volume = Integer.parseInt(v);
-	String emailToken = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userService.findUserByEmail(emailToken);
 		
-		boolean status = userService.buyStock(symbol, user, volume);
+
+		User user = userService.findUserByEmail(currentUser.getEmail());
+		
+		boolean status = userService.buyStock(stockPurchaseRequest.getSymbol(), user, stockPurchaseRequest.getVolume());
 		
 		if(status)		
-		return new ResponseEntity<>(HttpStatus.OK);
+			 return new ResponseEntity<>(new ApiResponse(true, "purchase successfull"),
+	                    HttpStatus.OK);
 		
 		else 
-			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+			 return new ResponseEntity<>(new ApiResponse(false, "purchase failure"),
+	                    HttpStatus.BAD_REQUEST);
 	}
 }

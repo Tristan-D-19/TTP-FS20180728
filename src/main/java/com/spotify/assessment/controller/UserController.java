@@ -30,18 +30,25 @@ public class UserController {
 	private UserService userService;
 	
     @GetMapping("/token")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         UserSummary userSummary = new UserSummary(currentUser.getUserId(), currentUser.getEmail(), currentUser.getName());
         return userSummary;
     }
 	
-	@GetMapping("/user/{id}/")
+	@GetMapping("/user/{id}")
 	public UserProfile getUser(@PathVariable(value = "id") Long id){
 
 		UserProfile userProfile = userService.getUser(id);
 		
 	
 		 return userProfile;
+		 
+//	@GetMapping("/user/{id}/account")
+//	public void getUserAccount(@PathVariable(value="id") Long id ) {
+//		
+//		return 
+//				
+//	}
 	}
 }

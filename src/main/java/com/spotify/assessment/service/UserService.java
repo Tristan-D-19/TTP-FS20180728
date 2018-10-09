@@ -90,17 +90,22 @@ public class UserService {
 		
 		Stock stock = stockRepository.findBySymbol(symbol);
 		Account account = accountRepository.findByUser(user);
+		
 		double balance = account.getBalance();
 		double amount = stock.getLastSalePrice();
-		accountRepository.save(account);
+		System.out.println(account);
+		
 		
 		int shares = stock.getVolume();
 		shares = shares - volume;
 		stock.setVolume(shares);
 		balance = balance - amount;
 		account.setBalance(balance);
-		
-		stockRepository.save(stock);
+		account = accountRepository.save(account);
+		stock = stockRepository.save(stock);
+		if(stock.getVolume() == shares && account.getBalance() == balance)
+		return true;
+		else 
 		return false;
 	}
 	

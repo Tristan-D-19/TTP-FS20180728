@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table, CheckBox, Form, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader, Label} from 'reactstrap';
-import AppNavbar from './AppNavBar';
 import { Link } from 'react-router-dom';
+import {buyStock, getAllStocks} from '../utils/APIHelper'
 
-function BuyStock(props){
-  return (
-    <Button size="sm" color="primary" type="button" id="buy-button" onClick={props.toggle}>buy</Button>
-  )
-}
 class StockList extends Component {
 
 
   constructor(props) {
     super(props);
-    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false};
+    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false
+    // , user:this.props.currentUser
+  };
     this.onSubmit = this.onSubmit.bind(this);
     this.toggle = this.toggle.bind(this);
     this.onclick = this.onclick.bind(this);
     this.close = this.close.bind(this);
+
   }
 
   toggle(symbol) {   
@@ -42,43 +40,53 @@ class StockList extends Component {
   }
 
   componentDidMount() {
+    // console.log("state user", this.state.user);
     this.setState({isLoading: true});
-
-    fetch('api/stocks/all')
-      .then(response => response.json())
-      .then(data => this.setState({stocks: data, isLoading: false}));
+   getAllStocks()
+      .then(response => this.setState({stocks:response, isLoading:false}))
+      
   }
-  async onSubmit (event) {
+
+   onSubmit (event) {
     event.preventDefault()
     console.log("submit")
-  const {symbol, shares, purchased} = this.state;
+  const {symbol, shares} = this.state;
   const volume = shares;
+  // const user = this.props.currentUser;
    if (symbol && shares) {
-   const response = await fetch(`/api/stocks/buy`, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify( {symbol:symbol, volume:volume}),
-          }).then(() => {
-console.debug(response);
-          });
-    }
+    buyStock(symbol, volume).then(response => {
+      console.log(response);
+    }).catch(error=>{
+      console.log("fail")
+    })
+//    const response =  fetch(`/api/stocks/buy`, {
+//             method: 'POST',
+//             headers: {
+//               'Accept': 'application/json',
+//               'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify( {symbol:symbol, volume:volume}),
+//           }).then(() => {
+// console.debug(response);
+//           });
+//     }
 
   }
+}
 
   render() {
     const {stocks, isLoading} = this.state;
     const {isAuthenticated} = this.props;
    let buyStock;
     if(isAuthenticated){
-      buyStock = <BuyStock onClick={this.toggle.bind(this, this.state.symbol)} />
+      buyStock = <Button onClick={this.toggle.bind(this, this.state.symbol)}>Buy</Button>
     }
 
     if (isLoading) {
       return <p>Loading...</p>;
     }
+    const externalCloseBtn = <button className="close" style={{ position: 'absolute', top: '15px', right: '15px' }} onClick={this.close}>&times;</button>;
+    
     const stockList = stocks.map(stock => {
       const price = `${stock.lastSalePrice || ''}`;
       const volume = `${stock.volume || ''}`
@@ -89,10 +97,12 @@ console.debug(response);
         <td>{volume}</td>
         <td>
       
-          {buyStock}
-          <Form onSubmit={this.onSubmit}>            
-             <Modal isOpen={this.state.modal} toggle={this.toggle} className="modal-display">
-          <ModalHeader toggle={this.toggle}>Buy Shares</ModalHeader>  
+  
+        <Button onClick={this.toggle.bind(this,symbol)}>Buy</Button>
+                      
+             <Modal isOpen={this.state.modal} toggle={this.toggle} className="modal-display" external={externalCloseBtn}>
+             <form onSubmit={this.onSubmit}>    
+          <ModalHeader toggle={this.close}>Buy Shares</ModalHeader>  
            
           <Input type="hidden" name="symbol" className="symbol-button" value={this.state.symbol}></Input>
         
@@ -102,12 +112,15 @@ console.debug(response);
             <Input type="text" name="volume" id="shares" placeholder="Shares" value={this.state.shares}  onChange={e => this.setState({shares:e.target.value})}/>
            
           </ModalBody>
-          <ModalFooter>          
+          <ModalFooter>    
+            
             <Button color="primary"  type="submit" onClick={this.onSubmit} >Purchase</Button>
             <Button color="secondary" type="button" onClick={this.close}>Cancel</Button>
+           
           </ModalFooter>
+          </form>
         </Modal>
-           </Form>
+          
         </td>
       </tr>
     });
@@ -117,9 +130,9 @@ console.debug(response);
       
         <Container fluid>
           <div className="float-right">
-            <Button color="success" tag={Link} to="/stocks">buy Stock</Button>
+
           </div>
-          <h3>My Stocks</h3>
+          <h3>Stock Market</h3>
           <Table hover className="mt-4">
             <thead>
             <tr>

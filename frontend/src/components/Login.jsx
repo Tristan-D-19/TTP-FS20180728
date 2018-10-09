@@ -11,6 +11,7 @@ export default class Login extends Component {
     constructor(props) {
     super(props); 
     this.state = {
+      redirect:null,
     email: '',
     password: '',
     toHome: false,
@@ -19,9 +20,18 @@ export default class Login extends Component {
     emailError: {validationState:"", message:""},
     loginError:{validationState:"",message:""}
   }
+  
   this.onSubmit = this.onSubmit.bind(this);
   this.handleInputChange = this.handleInputChange.bind(this);
   
+}
+
+componentWillReceiveProps(nextProps) {
+  let user
+      if(nextProps.isAuthenticated)
+      {this.setState({redirect:true})
+   
+   } 
 }
 
   handleInputChange = (event) => {
@@ -50,12 +60,21 @@ export default class Login extends Component {
    if (email && password) {
    login(email, password)
     .then(response => {
+      console.log("successful login");
         localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-        this.props.onLogin();
-        this.props.history.push("/");
-    }).catch( error => {
+       return this.props.onLogin();
+    })
+    .then(user => {
+      if(user)
+     { this.props.setCurrentUser(user)
+      console.log("successful login");
+      this.setState({redirect: true})
+
+     }
+    })
+    .catch( error => {
         if(error.status === 401) {
-          this.setState({validationState:"error", message:'Your Username or Password is incorrect. Please try again!'}) 
+          this.setState({loginError:{validationState:"error", message:'Your Username or Password is incorrect. Please try again!'} }) 
 
                 console.log(this.state.loginError.message);
                 this.setState(() => ({
@@ -82,12 +101,10 @@ handleInputChange = (event) => {
   });
 }
   render() {
+    const { from } = this.props.location.state || { from: { pathname: '/' } }
 
-    if (this.state.toHome === true) {
-      return <Redirect to='/' />
-    }
-    if (this.state.reLoad === true) {
-      return <Redirect to='/login' />
+    if (this.state.redirect === true || this.props.isAuthenticated) {
+      return <Redirect to={from} />
     }
     
     return (

@@ -15,7 +15,8 @@ const request = (options) => {
 
     return fetch(options.url, options)
     .then(response => 
-        response.json().then(json => {
+        response.json()
+        .then(json => {
             if(!response.ok) {
                 return Promise.reject(json); 
             }
@@ -29,17 +30,16 @@ export function getAllStocks(page, size) {
     size = size || STOCK_LIST_SIZE;
 
     return request({
-        url: API_BASE_URL + "/stocks",
-        // ?page=" + page + "&size=" + size,
+        url: API_BASE_URL + "/stocks/all",
         method: 'GET'
     });
 }
 
-export function buyStock(symbol, volume, currentUser) {
+export function buyStock(symbol, volume) {
     return request({
         url: API_BASE_URL + "/stocks/buy",
         method: 'POST',
-        body: JSON.stringify({symbol:symbol, volume:volume, currentUser:currentUser})         
+        body: JSON.stringify({symbol:symbol, volume:volume})         
     });
 }
 
@@ -78,6 +78,12 @@ export function getUserProfile(id) {
         url: API_BASE_URL + "/users/user/" + id,
         method: 'GET'
     });
+}
+
+export function getUserAccount(id){
+    return request({
+        url: API_BASE_URL + ""
+    })
 }
 
 export function getUserTransactions(id) {

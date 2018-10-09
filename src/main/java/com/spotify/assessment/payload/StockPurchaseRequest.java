@@ -1,6 +1,8 @@
 package com.spotify.assessment.payload;
 
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 public class StockPurchaseRequest {
@@ -17,7 +19,7 @@ public class StockPurchaseRequest {
 	        this.symbol = symbol;
 	    }
 	    
-	    @NotBlank
+	    @DecimalMin(value = "1")
 	    private int volume; 
 	    
 	    public int getVolume() {

@@ -1,5 +1,6 @@
 package com.spotify.assessment.controller;
 
+import java.net.URI;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spotify.assessment.domain.User;
@@ -64,9 +66,8 @@ public class AuthController {
 	@PostMapping("/login")
     public ResponseEntity<?> loginUser( @Valid @RequestBody LoginRequest loginRequest) {    	
 	     
-		User user = userService.findUserByEmail(loginRequest.getEmail());
-		
-//		System.out.println(user);
+
+
 		 Authentication auth = authManager.authenticate(
 	                new UsernamePasswordAuthenticationToken(
 	                        loginRequest.getEmail(),
@@ -78,8 +79,6 @@ public class AuthController {
 	        SecurityContext sc = SecurityContextHolder.getContext();
 	        sc.setAuthentication(auth);
 	        System.out.print(sc.getAuthentication().getName());
-//	        HttpSession session = request.getSession(true);
-//	        session.setAttribute("SPRING_SECURITY_CONTEXT", sc);
 
 	        
 	        String jwt = tokenProvider.generateToken(auth);
@@ -107,8 +106,14 @@ public class AuthController {
          
         User newUser = new User(registerRequest.getName(), registerRequest.getPassword(), registerRequest.getEmail());
         
-            userService.createNewUser(newUser);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            User result = userService.createNewUser(newUser);
+            
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentContextPath().path("/users/{id}")
+                    .buildAndExpand(result.getUserId()).toUri();
+
+            return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+//            return new ResponseEntity<>(HttpStatus.CREATED);
     }
 	
 }

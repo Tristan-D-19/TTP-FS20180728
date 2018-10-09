@@ -14,7 +14,7 @@ export function validateEmail(email = "") {
 export function validatePassword(password = "", password2 = ""){
     const length = password.length
      let error = {validationState: "",  message:""}
-    if (length > 7) {
+    if (length > 7 && password == password2) {
         error = { validationState: 'success', message:""
         }
     }

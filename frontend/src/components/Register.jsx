@@ -12,7 +12,6 @@ export default class Register extends Component {
       this.state = {
           name: "", password1: "", password2: "", email: "", 
           submitted: false, 
-          response: 0,
           date: "",
           loaded: false,
           toLogin: false,
@@ -27,7 +26,7 @@ export default class Register extends Component {
 
 
     //handle form submission
-     handleSubmit(event) {
+     async handleSubmit(event) {
         event.preventDefault();
      
      const { 
@@ -46,8 +45,11 @@ export default class Register extends Component {
        
         const password = (password1 == password2) ? password2: null;
         if (name && email && password) {
-        register(name, email, password)
-        .then(response => {          
+       await register(name, email, password)
+        .then(response => {  
+            
+            if(response)
+            console.log("REGISTERING!");
                 let description = "Thank you! You're successfully registered. Please Login to continue!";
                console.log("trying redirection", this.props.history);
                 this.props.history.push('/login');           

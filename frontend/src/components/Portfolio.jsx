@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table, CheckBox, Form, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader, Label} from 'reactstrap';
-import AppNavbar from './AppNavBar';
+
 import { Link } from 'react-router-dom';
 
-class StockList extends Component {
+class Portfolio extends Component {
 
   constructor(props) {
     super(props);
     this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false};
     this.onSubmit = this.onSubmit.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.onclick = this.onclick.bind(this);
-    this.close = this.close.bind(this);
+    // this.toggle = this.toggle.bind(this);
+    // this.onclick = this.onclick.bind(this);
+    // this.close = this.close.bind(this);
   }
 
 
@@ -114,4 +114,4 @@ console.debug(response);
   }
 }
 
-export default StockList;
+export default Portfolio;
