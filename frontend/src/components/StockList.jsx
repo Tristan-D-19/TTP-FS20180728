@@ -44,6 +44,7 @@ class StockList extends Component {
     this.setState({isLoading: true});
    getAllStocks()
       .then(response => this.setState({stocks:response, isLoading:false}))
+      .catch(error=>console.log(error))
       
   }
 
@@ -56,6 +57,11 @@ class StockList extends Component {
    if (symbol && shares) {
     buyStock(symbol, volume).then(response => {
       console.log(response);
+      this.setState({ modal: !this.state.modal})
+      getAllStocks()
+        .then(response => this.setState({stocks:response, isLoading:false}))
+        .catch(error=>this.setState({isLoading:true}))
+  
     }).catch(error=>{
       console.log("fail")
     })
@@ -88,7 +94,7 @@ class StockList extends Component {
     const externalCloseBtn = <button className="close" style={{ position: 'absolute', top: '15px', right: '15px' }} onClick={this.close}>&times;</button>;
     
     const stockList = stocks.map(stock => {
-      const price = `${stock.lastSalePrice || ''}`;
+      const price = `${stock.lastSalesPrice || ''}`;
       const volume = `${stock.volume || ''}`
       const symbol =  `${stock.symbol || ''}`;
       return <tr  key={stock.symbol}>

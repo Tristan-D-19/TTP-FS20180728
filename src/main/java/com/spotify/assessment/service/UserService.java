@@ -1,8 +1,12 @@
 package com.spotify.assessment.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 import javax.transaction.Transactional;
 
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.spotify.assessment.domain.Account;
 import com.spotify.assessment.domain.Role;
 import com.spotify.assessment.domain.Stock;
+import com.spotify.assessment.domain.Transaction;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.payload.UserProfile;
 import com.spotify.assessment.repositories.*;
@@ -34,6 +39,9 @@ public class UserService {
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired 
+	private TransactionRepository transactionRepository;
 	
 	 @Autowired
 	 private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -93,17 +101,45 @@ public class UserService {
 		
 		double balance = account.getBalance();
 		double amount = stock.getLastSalePrice();
-		System.out.println(account);
 		
 		
+		//check shares	
 		int shares = stock.getVolume();
+		if ((shares-volume) < 0)
+			return false;
 		shares = shares - volume;
-		stock.setVolume(shares);
+		
+		
+		Stock userStock = new Stock(stock);
+		userStock.setVolume(volume);
+		//check balance
+		if((balance- amount) < 0 || balance <= 0)
+			return false;
+		
+		Transaction transaction = new Transaction("BUY", shares, stock.getLastSalePrice(), account);
+		transaction = transactionRepository.save(transaction);
 		balance = balance - amount;
 		account.setBalance(balance);
+		List<Transaction> userTransactions = account.getTransactions();
+		userTransactions.add(transaction);
+		//change to hashmap to ensure no duplicates
+		HashMap<String, Stock> userStocks = new HashMap<String, Stock>();
+		account.getStocks().stream().forEach(stockItem-> userStocks.put(stockItem.getSymbol(), stockItem));
+		stock.setVolume(volume);
+		userStocks.put(stock.getSymbol(),stock);
+		
+		//turn back to list 
+		 List<Stock> userStockList = new ArrayList<Stock> ();
+		 userStockList.addAll(userStocks.values());
+		account.setStocks(userStockList);
 		account = accountRepository.save(account);
+		userStock = stock;
+		stock.setVolume(shares);
+		List<Account> accounts = stock.getAccount();
+		accounts.add(account);
+		stock.setAccount(accounts);
 		stock = stockRepository.save(stock);
-		if(stock.getVolume() == shares && account.getBalance() == balance)
+		if(stock.getVolume() == shares && account.getBalance() == balance && account.getStocks().contains(stock))
 		return true;
 		else 
 		return false;
@@ -123,7 +159,8 @@ public class UserService {
 	public UserProfile getUser(Long userId) {
 		User user = userRepository.findById(userId).orElse(null);
 		Account account = accountRepository.findByUser(user);
-		UserProfile userAccount = new UserProfile(user.getUserId(), user.getName(), user.getEmail(), account.getStocks(), account.getBalance());
+		Collection<Stock> stocks = account.getStocks();
+		UserProfile userAccount = new UserProfile(user.getUserId(), user.getName(), user.getEmail(), stocks, account.getBalance());
 		return userAccount;
 	}
 }

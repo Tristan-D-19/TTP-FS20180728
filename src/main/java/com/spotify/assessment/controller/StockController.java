@@ -27,6 +27,7 @@ import com.spotify.assessment.domain.Stock;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.payload.ApiResponse;
 import com.spotify.assessment.payload.StockPurchaseRequest;
+import com.spotify.assessment.payload.StockResponse;
 import com.spotify.assessment.repositories.StockRepository;
 import com.spotify.assessment.security.CurrentUser;
 import com.spotify.assessment.security.UserPrincipal;
@@ -48,12 +49,16 @@ public class StockController {
 	private StockRepository stockRepository;
 	
 	@GetMapping("/all")
-	public Collection<Stock> getAllStocks(@CurrentUser UserPrincipal currentUser, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+	public Collection<StockResponse> getAllStocks(@CurrentUser UserPrincipal currentUser, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
 //		List<Stock> stocks = stockReader.executeRequest();
 		List<Stock> stocks = stockRepository.findAll();
+		List<StockResponse> stockResponses = new ArrayList<StockResponse>();
 //		stockRepository.findAll(page, size);
-	return stocks;
+		stocks.stream().forEach(stock -> {
+			stockResponses.add(new StockResponse(stock));
+			});
+	return stockResponses;
 	}
 	
 	

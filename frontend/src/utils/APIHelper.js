@@ -73,9 +73,9 @@ export function getCurrentUser() {
     });
 }
 
-export function getUserProfile(id) {
+export function getUserProfile() {
     return request({
-        url: API_BASE_URL + "/users/user/" + id,
+        url: API_BASE_URL + "/users/user",
         method: 'GET'
     });
 }

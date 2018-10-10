@@ -1,6 +1,8 @@
 package com.spotify.assessment.payload;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.spotify.assessment.domain.Account;
@@ -11,15 +13,17 @@ public class UserProfile {
    
     private String name;
     private String email;
-    private  List<Stock> stocks; 
+    private  Collection<StockResponse> stocks; 
     private double balance;
     
-    public UserProfile(Long id, String name,  String email, List<Stock> stocks, double balance ) {
+    public UserProfile(Long id, String name,  String email, Collection<Stock> stocks2, double balance ) {
         this.id = id;
        this.email = email;
         this.name = name;
         this.balance = balance; 
-        this.stocks = stocks;
+        Collection<StockResponse> set = new ArrayList<StockResponse>();
+        stocks2.stream().forEach(stock -> set.add(new StockResponse(stock)));
+        this.stocks = set;
     }
 
     public String getEmail() {
@@ -30,11 +34,11 @@ public class UserProfile {
 		this.email = email;
 	}
 
-	public List<Stock> getStocks() {
+	public Collection<StockResponse> getStocks() {
 		return this.stocks;
 	}
 
-	public void setStocks(List<Stock> stocks) {
+	public void setStocks(Collection<StockResponse> stocks) {
 		this.stocks = stocks;
 	}
 

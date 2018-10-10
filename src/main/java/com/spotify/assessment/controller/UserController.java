@@ -36,10 +36,10 @@ public class UserController {
         return userSummary;
     }
 	
-	@GetMapping("/user/{id}")
-	public UserProfile getUser(@PathVariable(value = "id") Long id){
+	@GetMapping("/user")
+	public UserProfile getUser(@CurrentUser UserPrincipal currentUser){
 
-		UserProfile userProfile = userService.getUser(id);
+		UserProfile userProfile = userService.getUser(currentUser.getUserId());
 		
 	
 		 return userProfile;

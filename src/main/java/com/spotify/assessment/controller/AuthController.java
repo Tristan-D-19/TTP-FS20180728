@@ -65,31 +65,22 @@ public class AuthController {
 	
 	@PostMapping("/login")
     public ResponseEntity<?> loginUser( @Valid @RequestBody LoginRequest loginRequest) {    	
-	     
-
-
+	    
 		 Authentication auth = authManager.authenticate(
 	                new UsernamePasswordAuthenticationToken(
 	                        loginRequest.getEmail(),
 	                        loginRequest.getPassword()
 	                ));
-	                
-	 	
-	      
-	        SecurityContext sc = SecurityContextHolder.getContext();
+	     SecurityContext sc = SecurityContextHolder.getContext();
 	        sc.setAuthentication(auth);
-	        System.out.print(sc.getAuthentication().getName());
 
-	        
 	        String jwt = tokenProvider.generateToken(auth);
-	        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-	
+	        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));	
     }
 	
 	
 	@PostMapping({"/registration", "/register"})
-    public ResponseEntity<?> registration(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult) {
-        
+    public ResponseEntity<?> registration(@Valid @RequestBody RegisterRequest registerRequest, BindingResult bindingResult) {      
      
         //check for existing user
         User userExists = userRepo.findByEmail(registerRequest.getEmail()).orElse(null);
@@ -100,9 +91,6 @@ public class AuthController {
                     HttpStatus.BAD_REQUEST);
         }
         SecurityContext sc = SecurityContextHolder.getContext();
-       
-     
-        System.out.println(registerRequest);
          
         User newUser = new User(registerRequest.getName(), registerRequest.getPassword(), registerRequest.getEmail());
         
@@ -113,7 +101,7 @@ public class AuthController {
                     .buildAndExpand(result.getUserId()).toUri();
 
             return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
-//            return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 	
 }

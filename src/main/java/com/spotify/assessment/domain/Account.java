@@ -1,5 +1,8 @@
 package com.spotify.assessment.domain;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -37,6 +40,9 @@ public class Account {
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	private List <Stock> stocks;
+	
+	@OneToMany(cascade= {CascadeType.ALL})
+	private List<Transaction> transactions;
 	
 	public Account(User user) {
 		this.user = user;

@@ -6,18 +6,25 @@ export default class Profile extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false, user:null,profile:null, 
+    this.state = {stocks: [], isLoading: true, symbol:"", shares:null, purchased:"",  modal: false, user:null,profile:null, 
     symbolError:{validationState:"", message:""}, shareError:{validationState:"", message:""}  
 };
 this.onSubmit = this.onSubmit.bind(this);
     
   }
  
+  componentDidMount() {
+    // console.log("state user", this.state.user);
+    this.setState({isLoading: true});
+   getUserProfile()
+      .then(response => this.setState({profile:response, isLoading:false, stocks:response.stocks}))
+  }
+
   componentWillReceiveProps(nextProps) {
       if(nextProps.currentUser)
       {this.setState({user:nextProps.currentUser})
     console.log(nextProps.currentUser)
-      getUserProfile(nextProps.currentUser.id).then(
+      getUserProfile().then(
         response => {
             console.log(response)
             this.setState({profile:response, stocks:response.stocks})
@@ -28,12 +35,19 @@ this.onSubmit = this.onSubmit.bind(this);
 
 onSubmit(event){
 event.preventDefault()
+
 const {symbol, shares} = this.state;
-const user = this.props.currentUser;
-if(symbol && shares && user)
-buyStock(symbol, shares, user)
+console.log("submitting", shares);
+if(symbol && shares)
+buyStock(symbol, shares)
 .then(response => {
     console.log(response)
+    getUserProfile().then(
+        response => {
+            console.log(response)
+            this.setState({profile:response, stocks:response.stocks})
+          }
+      ).catch(error=>{console.log(error)})
 })
 .catch(error => {
 
@@ -51,7 +65,7 @@ buyStock(symbol, shares, user)
 
     if(stocks)
     stockList = stocks.map(stock => {
-        const price = `${stock.lastSalePrice || ''}`;
+        const price = `${stock.lastSalesPrice || ''}`;
         const volume = `${stock.volume || ''}`
         const symbol =  `${stock.symbol || ''}`;
         return <tr  key={stock.symbol}>
@@ -88,7 +102,7 @@ return(
         <h5>
             Cash <Label>${profile.balance}</Label>
         </h5> 
-        <Form>
+        <form onSubmit={this.onSubmit}>
         <FormGroup row>
             <Label for="ticker" sm={2}>Ticker</Label>
             <Col sm={10}>
@@ -108,7 +122,7 @@ return(
             </Col>
         </FormGroup>
         <Button type="submit" onClick={this.onSubmit}> Buy </Button>
-        </Form>
+        </form>
         </Jumbotron>
         </Col>
     </Row>

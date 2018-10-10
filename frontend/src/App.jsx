@@ -40,6 +40,8 @@ class App extends Component {
       currentUser:user,
       isAuthenticated:true
     })
+    console.log(user)
+    console.log(this.state)
     }
     else{this.setState({
       currentUser:null,

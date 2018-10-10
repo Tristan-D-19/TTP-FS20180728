@@ -43,4 +43,10 @@ public Stock(String symbol,double lastSalePrice2, int volume2) {
 	this.symbol = symbol;
 	}
 
+public Stock(Stock stock) {
+	this.lastSalePrice = stock.getLastSalePrice();
+	this.volume = stock.getVolume();
+	this.symbol = stock.getSymbol();
+}
+
 }

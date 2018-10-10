@@ -30,9 +30,7 @@ handleLogout(){
     });
   }
   render() {
-    let portfolioButton, logoutButton;
-    let navContent;
-    const isAuthenticated = this.props.isAuthenticated;
+
     const currentUser = this.props.currentUser;
    
     // portfolioButton = <PortfolioButton />;
@@ -43,7 +41,7 @@ handleLogout(){
         <div>
       <Navbar color="light" light expand="md">
     <NavbarBrand href="/">Stock Trade</NavbarBrand>
-    <NavbarToggler onClick={this.toggle} />
+    <NavbarToggler onClick={this.toggleNavbar} />
     <Collapse isOpen={this.state.isOpen} navbar>
       <Nav className="ml-auto" navbar>
       <NavItem>
