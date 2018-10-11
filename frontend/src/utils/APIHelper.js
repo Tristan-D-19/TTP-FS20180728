@@ -30,7 +30,7 @@ export function getAllStocks(page, size) {
     size = size || STOCK_LIST_SIZE;
 
     return request({
-        url: API_BASE_URL + "/stocks/all",
+        url: API_BASE_URL + `/stocks/all?page=${page}&limit=${size}`,
         method: 'GET'
     });
 }

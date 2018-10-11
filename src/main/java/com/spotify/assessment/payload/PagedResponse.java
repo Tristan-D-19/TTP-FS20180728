@@ -3,6 +3,14 @@ package com.spotify.assessment.payload;
 
 import java.util.List;
 
+
+/**
+ *  Delivers a pageable response to a request. 
+ * @author Tristan
+ *
+ *
+ * @param <T> Collection of pageable items
+ */
 public class PagedResponse<T> {
 
     private List<T> content;

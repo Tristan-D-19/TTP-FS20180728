@@ -33,10 +33,10 @@ public class RestStockReader {
 		restTemplate = new RestTemplate();
 		
 		ParameterizedTypeReference<List<Stock>> listOfStock = new ParameterizedTypeReference<List<Stock>>() {};
-
-//		ResponseEntity<List<Stock>> stockBody = this.restTemplate.exchange(IEXURL, HttpMethod.GET, null, listOfStock);
-//		List<Stock> stocks = stockBody.getBody();	
-		List<Stock> stocks = new ArrayList<Stock>();
+	
+		ResponseEntity<List<Stock>> stockBody = this.restTemplate.exchange(IEXURL, HttpMethod.GET, null, listOfStock);
+		List<Stock> stocks = stockBody.getBody();	
+		
 		return stocks;
 	}
 }

@@ -25,13 +25,16 @@ public class Transaction {
 	
 	private double boughtPrice;
 	
+	private String symbol;
+	
 	@ManyToOne(cascade=CascadeType.ALL)
 	private Account account;
 	
-	public Transaction(String transactionType, int shares, double price, Account account) {
+	public Transaction(String transactionType, int shares, double price, String symbol,  Account account) {
 		this.transactionType = transactionType;
 		this.shares = shares;
 		this.boughtPrice = price;
 		this.account = account;
+		this.symbol = symbol;
 	}
 }

@@ -116,7 +116,7 @@ public class UserService {
 		if((balance- amount) < 0 || balance <= 0)
 			return false;
 		
-		Transaction transaction = new Transaction("BUY", shares, stock.getLastSalePrice(), account);
+		Transaction transaction = new Transaction("BUY", shares, stock.getLastSalePrice(), stock.getSymbol(), account);
 		transaction = transactionRepository.save(transaction);
 		balance = balance - amount;
 		account.setBalance(balance);
@@ -162,5 +162,10 @@ public class UserService {
 		Collection<Stock> stocks = account.getStocks();
 		UserProfile userAccount = new UserProfile(user.getUserId(), user.getName(), user.getEmail(), stocks, account.getBalance());
 		return userAccount;
+	}
+	
+	public List<Transaction> getTransactions(User user){
+		Account account = accountRepository.findByUser(user);
+		return account.getTransactions();
 	}
 }

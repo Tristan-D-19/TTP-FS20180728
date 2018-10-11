@@ -84,20 +84,21 @@ public class DatabaseLoader implements CommandLineRunner {
 		adminUser = this.userRepository.save(adminUser);
 		
 		
-//		List<Stock> stocks = stockReader.executeRequest();
-		List<Stock> stocks = new ArrayList<Stock>();
-	
-				stocks.add(new Stock("AXP", 108.42, 38444));
-				stocks.add(new Stock("VFMV", 0.0, 0));
-				stocks.add(new Stock("NCNA", 129.93, 346));
-				stocks.add(new Stock("ZBH", 75.58, 164));
-				stocks.add(new Stock("VWOB", 200.46, 0));
-				stocks.add(new Stock("HYDW", 0.0, 0));
-				stocks.add(new Stock("QVM", 0.0, 0));
-				stocks.add(new Stock("AXP", 86.2, 1358182 ));
-				stocks.add(new Stock("HYG", 108.42, 34979));
-				stocks.add(new Stock("SOR", 108.42, 3536));		
-				stocks.add(new Stock("NXST", 108.42, 13796));
+		List<Stock> stocks = stockReader.executeRequest();
+		
+		
+				
+//				stocks.add(new Stock("AXP", 108.42, 38444));
+//				stocks.add(new Stock("VFMV", 0.0, 0));
+//				stocks.add(new Stock("NCNA", 129.93, 346));
+//				stocks.add(new Stock("ZBH", 75.58, 164));
+//				stocks.add(new Stock("VWOB", 200.46, 0));
+//				stocks.add(new Stock("HYDW", 0.0, 0));
+//				stocks.add(new Stock("QVM", 0.0, 0));
+//				stocks.add(new Stock("AXP", 86.2, 1358182 ));
+//				stocks.add(new Stock("HYG", 108.42, 34979));
+//				stocks.add(new Stock("SOR", 108.42, 3536));		
+//				stocks.add(new Stock("NXST", 108.42, 13796));
 						
 		stocks.stream().forEach(stock -> {
 			stockRepository.saveAndFlush(stock);

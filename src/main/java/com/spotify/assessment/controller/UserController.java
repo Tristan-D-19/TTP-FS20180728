@@ -1,5 +1,9 @@
 package com.spotify.assessment.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spotify.assessment.domain.Transaction;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.exceptions.ResourceNotFoundException;
+import com.spotify.assessment.payload.TransactionResponse;
 import com.spotify.assessment.payload.UserProfile;
 import com.spotify.assessment.payload.UserSummary;
 import com.spotify.assessment.repositories.UserRepository;
@@ -43,12 +49,15 @@ public class UserController {
 		
 	
 		 return userProfile;
-		 
-//	@GetMapping("/user/{id}/account")
-//	public void getUserAccount(@PathVariable(value="id") Long id ) {
-//		
-//		return 
-//				
-//	}
-	}
+	}	 
+	@GetMapping("/user/transactions")
+	public Collection<TransactionResponse> getUserTransactions(@CurrentUser UserPrincipal currentUser) {
+		User user = userService.findById(currentUser.getUserId());
+		List<Transaction> transactions = userService.getTransactions(user);
+		List <TransactionResponse> transactionResponses = new ArrayList<TransactionResponse>();
+		transactions.stream().forEach(transaction -> transactionResponses.add(new TransactionResponse(transaction)));
+		
+		return transactionResponses;
+		}
+	
 }

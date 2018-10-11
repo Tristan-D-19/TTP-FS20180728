@@ -48,10 +48,10 @@ handleLogout(){
     <NavLink href="/stocks">Stocks</NavLink>
     </NavItem>
       <NavItem>
-      <NavLink href="user/profile">Profile</NavLink>
+      <NavLink href="user/portfolio">Portfolio</NavLink>
     </NavItem>
     <NavItem>
-    <NavLink  href="/user/portfolio">Portfolio</NavLink>
+    <NavLink  href="/user/transactions">Transactions</NavLink>
   </NavItem>
     <NavItem> 
     <NavLink onClick={this.props.onLogout} href="/logout" >Logout</NavLink>

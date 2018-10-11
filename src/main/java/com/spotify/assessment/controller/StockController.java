@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,12 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spotify.assessment.domain.Stock;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.payload.ApiResponse;
+import com.spotify.assessment.payload.PagedResponse;
 import com.spotify.assessment.payload.StockPurchaseRequest;
 import com.spotify.assessment.payload.StockResponse;
 import com.spotify.assessment.repositories.StockRepository;
 import com.spotify.assessment.security.CurrentUser;
 import com.spotify.assessment.security.UserPrincipal;
 import com.spotify.assessment.service.RestStockReader;
+import com.spotify.assessment.service.StockService;
 import com.spotify.assessment.service.UserService;
 import com.spotify.assessment.validator.AppConstants;
 
@@ -45,20 +49,23 @@ public class StockController {
 	@Autowired 
 	private UserService userService;
 	
+	@Autowired 
+	private StockService stockService;
 	@Autowired
 	private StockRepository stockRepository;
 	
-	@GetMapping("/all")
-	public Collection<StockResponse> getAllStocks(@CurrentUser UserPrincipal currentUser, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+	@GetMapping(value ="/all")
+	public PagedResponse<StockResponse> getAllStocks(Pageable pageable, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
-//		List<Stock> stocks = stockReader.executeRequest();
-		List<Stock> stocks = stockRepository.findAll();
-		List<StockResponse> stockResponses = new ArrayList<StockResponse>();
-//		stockRepository.findAll(page, size);
-		stocks.stream().forEach(stock -> {
-			stockResponses.add(new StockResponse(stock));
-			});
-	return stockResponses;
+
+//		List<Stock> stocks = stockRepository.findAll();
+//		Page <Stock> stockPage = stockRepository.findAll(pageable);
+//		List<StockResponse> stockResponses = new ArrayList<StockResponse>();
+//
+//		stocks.stream().forEach(stock -> {
+//			stockResponses.add(new StockResponse(stock));
+//			});
+	return stockService.getStocks(page, size);
 	}
 	
 	

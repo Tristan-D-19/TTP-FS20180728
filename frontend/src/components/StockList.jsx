@@ -8,7 +8,8 @@ class StockList extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false
+    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false, 
+    page:0, limit:50
     // , user:this.props.currentUser
   };
     this.onSubmit = this.onSubmit.bind(this);
@@ -42,8 +43,13 @@ class StockList extends Component {
   componentDidMount() {
     // console.log("state user", this.state.user);
     this.setState({isLoading: true});
-   getAllStocks()
-      .then(response => this.setState({stocks:response, isLoading:false}))
+    console.log(this.state)
+   getAllStocks(this.state.page, this.state.limit)
+      .then(response => {
+        console.log(response.content)
+      this.setState({stocks:response.content, isLoading:false})
+    }
+      )
       .catch(error=>console.log(error))
       
   }
@@ -58,8 +64,8 @@ class StockList extends Component {
     buyStock(symbol, volume).then(response => {
       console.log(response);
       this.setState({ modal: !this.state.modal})
-      getAllStocks()
-        .then(response => this.setState({stocks:response, isLoading:false}))
+      getAllStocks(this.state.page, this.state.limit)
+        .then(response => this.setState({stocks:response.content, isLoading:false}))
         .catch(error=>this.setState({isLoading:true}))
   
     }).catch(error=>{

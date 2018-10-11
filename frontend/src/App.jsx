@@ -15,7 +15,7 @@ import Portfolio from './components/Portfolio';
 import NotFound from './components/NotFound';
 import {ACCESS_TOKEN} from  './constants';
 import { timeoutsShape } from 'reactstrap';
-
+import Transactions from './components/Transactions'
 class App extends Component {
 
   constructor(props) {
@@ -34,6 +34,7 @@ class App extends Component {
    this.setCurrentUser = this.setCurrentUser.bind(this);
   }
 
+  
   setCurrentUser(user){
     if(user)
     {this.setState({
@@ -151,11 +152,11 @@ class App extends Component {
                   render={(props) => <Register onRegister={this.handleRegister} {...props} />}></Route>          
         <Route exact path ="/register" component={Register}/>
 
-        <PrivateRoute exact path="/user/profile" 
-                  component={Profile} loadProfile={this.loadUserProfile} isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} >
+        <PrivateRoute exact path="/user/portfolio" 
+                  component={Portfolio} loadProfile={this.loadUserProfile} isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} >
         </PrivateRoute>
-        <PrivateRoute exact path="/user/portfolio"
-        component={(props) => <Portfolio isAuthenticated={authenticated} currentUser={this.state.currentUser} {...props}  />} >
+        <PrivateRoute exact path="/user/transactions"
+        component={Transactions} isAuthenticated={authenticated} currentUser={this.state.currentUser} >
         </PrivateRoute>
         <Route path="/logout" component={Home}></Route>
                 <Route component={NotFound}></Route>      
