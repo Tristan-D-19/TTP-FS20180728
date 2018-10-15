@@ -9,6 +9,11 @@ import org.springframework.validation.Validator;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.repositories.UserRepository;
 
+/**
+ * Validate user fields 
+ * @author Tristan
+ *
+ */
 @Component
 public class UserValidator implements Validator {
 
@@ -39,10 +44,6 @@ public class UserValidator implements Validator {
 	        if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
 	            errors.rejectValue("password", "Size.userForm.password");
 	        }
-
-//	        if (!user.getPassword().equals(user.getPassword())) {
-//	            errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
-//	        }
 
 		
 	}

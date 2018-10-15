@@ -3,17 +3,16 @@ package com.spotify.assessment.security;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.spotify.assessment.repositories.UserRepository;
 
 import java.util.Date;
 
 /**
- * This class provides a JWT token for authentication
+ * This class provides a JWT token for an authenticated request
  * @author Tristan
  *
  */

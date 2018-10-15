@@ -3,6 +3,7 @@ import './NotFound.css';
 import { Link } from 'react-router-dom';
 import { Button, Jumbotron, Alert } from 'reactstrap';
 
+//Notfound component: displays when a user enters an unknown page
 class NotFound extends Component {
     render() {
         return (

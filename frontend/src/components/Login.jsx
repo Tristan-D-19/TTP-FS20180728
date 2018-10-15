@@ -6,7 +6,7 @@ import { ACCESS_TOKEN } from '../constants';
 import {  Redirect} from "react-router-dom";
 import {validateEmail, validateLoginPassword} from '../utils/validators';
 
-
+//Login component will allow a user to login by making a post request to the backend API
 export default class Login extends Component {
     constructor(props) {
     super(props); 
@@ -19,35 +19,19 @@ export default class Login extends Component {
     passwordError: {validationState:"", message:""},
     emailError: {validationState:"", message:""},
     loginError:{validationState:"",message:""}
-  }
-  
+  } 
   this.onSubmit = this.onSubmit.bind(this);
-  this.handleInputChange = this.handleInputChange.bind(this);
-  
 }
 
+//check if user is logged in
 componentWillReceiveProps(nextProps) {
-  let user
       if(nextProps.isAuthenticated)
       {this.setState({redirect:true})
    
    } 
 }
 
-  handleInputChange = (event) => {
-    event.preventDefault();   
-    const target = event.target,
-          value = target.type === 
-            'checkbox' ? target.checked : target.value,
-          name = target.name
-    this.setState({
-      [name]: value
-    });
-  }
-
-
-
-  
+  //handles user login
    onSubmit (event) {
     event.preventDefault()
    const {password, email } = this.state;
@@ -83,30 +67,18 @@ componentWillReceiveProps(nextProps) {
         } else {               
                 let description = 'Sorry! Something went wrong. Please try again!'
                 console.log(description);
-                this.props.history.push("/login");
-                
-                
+                this.props.history.push("/login");             
           }
       });
   }
 }
 
-handleInputChange = (event) => {
-  const target = event.target,
-        value = target.type === 
-          'checkbox' ? target.checked : target.value,
-        name = target.name
-  this.setState({
-    [name]: value
-  });
-}
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
 
     if (this.state.redirect === true || this.props.isAuthenticated) {
       return <Redirect to={from} />
     }
-    
     return (
       <Jumbotron className="container">
         <form onSubmit={this.onSubmit}>
@@ -130,8 +102,7 @@ handleInputChange = (event) => {
             validationState={this.state.passwordError.validationState}
             onChange={e => {
               
-              this.setState({password:e.target.value, passwordError:validateLoginPassword(this.state.password)})
-              console.log("password", this.state.password);
+              this.setState({password:e.target.value, passwordError:validateLoginPassword(this.state.password)})  
             }}/>
             </Col>
             <FormControl.Feedback />

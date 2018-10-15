@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import './App.css';
 import { getCurrentUser, getUserProfile } from './utils/APIHelper';
 import Home from './components/Home';
-import { BrowserRouter as Router, Route, Switch, Redirect, withRouter} from 'react-router-dom';
+import { BrowserRouter as Route, Switch, Redirect, withRouter} from 'react-router-dom';
 import StockList from './components/StockList';
 import AuthorizedNav from './components/AuthorizedNav';
 import UnauthorizeddNav from './components/UnauthorizedNav';
 import Register from './components/Register';
 import Login from './components/Login';
-import Profile from './components/Profile';
 import PrivateRoute from './PrivateRoute';
 import Portfolio from './components/Portfolio';
 import NotFound from './components/NotFound';
 import {ACCESS_TOKEN} from  './constants';
-import { timeoutsShape } from 'reactstrap';
 import Transactions from './components/Transactions'
+
+//Front end app 
 class App extends Component {
 
   constructor(props) {
@@ -34,15 +33,13 @@ class App extends Component {
    this.setCurrentUser = this.setCurrentUser.bind(this);
   }
 
-  
+  //Sets the current user to app state
   setCurrentUser(user){
     if(user)
     {this.setState({
       currentUser:user,
       isAuthenticated:true
     })
-    console.log(user)
-    console.log(this.state)
     }
     else{this.setState({
       currentUser:null,
@@ -51,6 +48,7 @@ class App extends Component {
     }
   }
 
+  //Loads the users profile
   loadUserProfile(){
 
     if(this.state.currentUser)
@@ -66,13 +64,13 @@ class App extends Component {
     });  
   })
   }
+  //Logs in a user
   handleLogin() {
     this.loadCurrentUser();
-    // this.props.history.push("/");
-    console.log("main");
     return this.state.currentUser
   }
 
+  //Registers a new user
   handleRegister(){
     this.props.history.push("/login");
     if (!this.state.isAuthenticated) {
@@ -80,6 +78,7 @@ class App extends Component {
     }
   }
 
+  //Load the current user to state, used for API auth. 
   loadCurrentUser() {
     this.setState({
       isLoading: true
@@ -99,18 +98,14 @@ class App extends Component {
     });
   }
 
-
+//Logs out a user
   handleLogout(redirectTo="/") {
     localStorage.removeItem(ACCESS_TOKEN);
-
     this.setState({
       currentUser: null,
       isAuthenticated: false
     });
-
     this.props.history.push(redirectTo);
-    
-
   }
 
   componentWillMount() {
@@ -127,7 +122,6 @@ class App extends Component {
             currentUser={this.state.currentUser} 
             onLogout={this.handleLogout}
       ></AuthorizedNav>
-      console.log("user", this.state.currentUser);
     }
     else{
       nav = <UnauthorizeddNav></UnauthorizeddNav>
@@ -137,9 +131,6 @@ class App extends Component {
             
       <div className="App-Header"> 
       {nav}
-      {/* <AppNavBar isAuthenticated={this.state.isAuthenticated} 
-            currentUser={this.state.currentUser} 
-            onLogout={this.handleLogout}/> */}
       </div>
       <Switch>
         <Route path='/' exact={true} component={Home}/> 
@@ -160,8 +151,7 @@ class App extends Component {
         </PrivateRoute>
         <Route path="/logout" component={Home}></Route>
                 <Route component={NotFound}></Route>      
-      </Switch>
-    
+      </Switch>   
     </div>);
   }
 }

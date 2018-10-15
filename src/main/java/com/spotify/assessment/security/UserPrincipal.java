@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Custom user details object to store user information in the security context
+ * @author Tristan
+ *
+ */
 public class UserPrincipal implements UserDetails {
     private Long id;
 

@@ -1,4 +1,4 @@
-package com.spotify.assessment.service;
+package com.spotify.assessment.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Authenticates a users request with a JWT from the local storage
+ * @author Tristan
+ *
+ */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

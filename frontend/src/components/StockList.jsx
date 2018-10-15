@@ -1,95 +1,251 @@
 import React, { Component } from 'react';
-import { Button, ButtonGroup, Container, Table, CheckBox, Form, FormGroup, Input, Modal, ModalBody, ModalFooter, ModalHeader, Label} from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Button, Table, Col,  FormControl, Label } from 'react-bootstrap';
+import {Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {buyStock, getAllStocks} from '../utils/APIHelper'
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
+
+// StockList component: List of todays stocks, users may purchase stocks here
 class StockList extends Component {
 
 
   constructor(props) {
     super(props);
-    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  modal: false, 
-    page:0, limit:50
-    // , user:this.props.currentUser
+    this.state = {stocks: [], isLoading: true, symbol:"", shares:"", purchased:"",  
+    modal: false, totalPages:null, totalStocks: null,
+    page:0, limit:50, backwards:false
   };
     this.onSubmit = this.onSubmit.bind(this);
     this.toggle = this.toggle.bind(this);
     this.onclick = this.onclick.bind(this);
     this.close = this.close.bind(this);
-
+    this.nextPage = this.nextPage.bind(this);
+    this.prevPage = this.prevPage.bind(this);
+    this.goToPage = this.goToPage.bind(this);
+    this.pageItem = this.pageItem.bind(this);
+    this.changePageDir = this.changePageDir.bind(this);
   }
 
+  //toggle a modal
   toggle(symbol) {   
-    console.log(symbol)
     this.setState({
       modal: !this.state.modal,
       symbol:symbol
     });
-  
-   
   }
 
+  //reverse the paging direction once a user hits the end
+  changePageDir(){
+    this.setState({backwards:true})  
+  }
+  pageItem (page, item){
+    let pageCursor = page + item
+    return <PaginationItem
+    onClick={this.setState({page:pageCursor})}
+    >{page + item}</PaginationItem>
+   }
+
+  //pull up the next page of stocks
+nextPage(){
+  let {page} = this.state;
+  this.setState({page:++page})
+  getAllStocks(this.state.page, this.state.limit)
+  .then(response => this.setState({stocks:response.content, isLoading:false}))
+  .catch(error=>{
+    console.log(error);
+    this.setState({isLoading:true})})
+}
+//pull up the previous page of stocks
+prevPage(){
+  let {page} = this.state;
+  this.setState({page:--page})
+  getAllStocks(this.state.page, this.state.limit)
+  .then(response => this.setState({stocks:response.content, isLoading:false}))
+  .catch(error=>{
+    console.log(error);
+    this.setState({isLoading:true})})
+}
+
+//go to a page that the user has clicked from pagination
+goToPage(pagePointer){
+ console.log(pagePointer)
+  this.setState({page:pagePointer})
+  console.log(this.state.page)
+  getAllStocks(pagePointer, this.state.limit)
+  .then(response => this.setState({stocks:response.content, isLoading:false}))
+  .catch(error=>{
+    console.log(error);
+    this.setState({isLoading:true})})
+}
+//Close a modal
   close(){
     this.setState({
       modal: !this.state.modal,
   })
 }
-  onclick(symbol){ 
-   
-   
+
+//set the stocks symbol to state
+onclick(symbol){    
     this.setState({symbol:symbol})
   }
 
   componentDidMount() {
-    // console.log("state user", this.state.user);
     this.setState({isLoading: true});
-    console.log(this.state)
+
    getAllStocks(this.state.page, this.state.limit)
       .then(response => {
-        console.log(response.content)
-      this.setState({stocks:response.content, isLoading:false})
+        console.log(response)
+      this.setState({stocks:response.content, isLoading:false,
+      totalPages:response.totalPages,totalStocks:response.totalElements
+      })
     }
       )
-      .catch(error=>console.log(error))
-      
+      .catch(error=>console.log(error))  
   }
-
+//handle stock purchase event 
    onSubmit (event) {
     event.preventDefault()
-    console.log("submit")
   const {symbol, shares} = this.state;
   const volume = shares;
-  // const user = this.props.currentUser;
    if (symbol && shares) {
     buyStock(symbol, volume).then(response => {
       console.log(response);
       this.setState({ modal: !this.state.modal})
       getAllStocks(this.state.page, this.state.limit)
-        .then(response => this.setState({stocks:response.content, isLoading:false}))
+        .then(response => this.setState({stocks:response.content, isLoading:false, shares:null}))
         .catch(error=>this.setState({isLoading:true}))
   
     }).catch(error=>{
-      console.log("fail")
+      console.log("failed to purchase stock")
     })
-//    const response =  fetch(`/api/stocks/buy`, {
-//             method: 'POST',
-//             headers: {
-//               'Accept': 'application/json',
-//               'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify( {symbol:symbol, volume:volume}),
-//           }).then(() => {
-// console.debug(response);
-//           });
-//     }
-
   }
 }
 
   render() {
-    const {stocks, isLoading} = this.state;
+    const {stocks, isLoading,totalPages} = this.state;
+    let {page} = this.state;
     const {isAuthenticated} = this.props;
-   let buyStock;
+    let stockPaginationItems
+    let prevPage = 
+    <PaginationItem>
+      <PaginationLink previous href="#" onClick={this.prevPage}  />
+    </PaginationItem>
+
+    let firstPage = <PaginationItem>
+    <PaginationLink href="#" onClick={e =>{
+      this.setState({backwards:false})
+      this.goToPage(0)}}>
+      {1}
+    </PaginationLink>
+   </PaginationItem> 
+
+    let nextPage =  <PaginationItem>
+    <PaginationLink href="#" onClick={e =>this.goToPage(totalPages)}>
+      {totalPages}
+    </PaginationLink>
+  </PaginationItem>
+
+//handle pagination for first page
+  if (page ===0){
+    firstPage = null
+    prevPage = null
+    
+  }
+  //handle last page for pagination
+    if(totalPages){
+
+      if(page===totalPages || this.state.backwards){
+        
+        nextPage = null
+        stockPaginationItems = <div style={{display: "contents"}}> 
+        <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page-5
+           this.changePageDir()
+           this.goToPage(p)}
+        }>
+           {page-5}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page-4
+           this.changePageDir()
+           this.goToPage(p)}}>
+           {page-4}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page-3
+           this.changePageDir()
+           this.goToPage(p)}}>
+           {page-3}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page-2
+           this.changePageDir()
+           this.goToPage(p)}}>
+           {page-2}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page-1
+           this.changePageDir()
+           this.goToPage(p)}}>
+           {page-1}
+         </PaginationLink>
+       </PaginationItem>
+     </div>
+
+      
+      }
+      else {
+        stockPaginationItems = <div style={{display: "contents"}}> 
+        <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page+1
+          
+           this.goToPage(p)}}>
+           {page+1}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#"onClick={e =>{
+           let p = page+2
+           this.goToPage(p)}}>
+           {page+2}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page+3
+           this.goToPage(p)}}>
+           {page+3}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page+4
+           this.goToPage(p)}}>
+           {page+4}
+         </PaginationLink>
+       </PaginationItem>
+       <PaginationItem>
+         <PaginationLink href="#" onClick={e =>{
+           let p = page+5
+           this.goToPage(p)}}>
+           {page+5}
+         </PaginationLink>
+       </PaginationItem>
+     </div>
+      }
+
+    }
+
     if(isAuthenticated){
       buyStock = <Button onClick={this.toggle.bind(this, this.state.symbol)}>Buy</Button>
     }
@@ -108,20 +264,20 @@ class StockList extends Component {
         <td>{price}</td>
         <td>{volume}</td>
         <td>
-      
-  
         <Button onClick={this.toggle.bind(this,symbol)}>Buy</Button>
                       
              <Modal isOpen={this.state.modal} toggle={this.toggle} className="modal-display" external={externalCloseBtn}>
              <form onSubmit={this.onSubmit}>    
           <ModalHeader toggle={this.close}>Buy Shares</ModalHeader>  
            
-          <Input type="hidden" name="symbol" className="symbol-button" value={this.state.symbol}></Input>
+          <FormControl type="hidden" name="symbol" className="symbol-button" value={this.state.symbol}></FormControl>
         
           <ModalBody>
           <Label for="shares" className="mt-4" sm={2}>Purchase Shares of {this.state.symbol}</Label> 
          
-            <Input type="text" name="volume" id="shares" placeholder="Shares" value={this.state.shares}  onChange={e => this.setState({shares:e.target.value})}/>
+            <FormControl type="text" name="volume" id="shares" placeholder="Shares" value={this.state.shares}  onChange={e => {this.setState({shares:e.target.value})
+            }  
+          }/>
            
           </ModalBody>
           <ModalFooter>    
@@ -140,7 +296,7 @@ class StockList extends Component {
     return (
       <div>
       
-        <Container fluid>
+        <Col fluid>
           <div className="float-right">
 
           </div>
@@ -158,7 +314,21 @@ class StockList extends Component {
             {stockList}
             </tbody>
           </Table>
-        </Container>
+         
+        </Col>
+      
+        <Pagination aria-label="Page navigation example">
+        {prevPage}
+        {firstPage}
+      
+        {stockPaginationItems}
+
+        <PaginationItem>
+          <PaginationLink next href="#" onClick={this.nextPage}/>
+        </PaginationItem>
+       {nextPage}
+      </Pagination>
+        
       </div>
     );
   }

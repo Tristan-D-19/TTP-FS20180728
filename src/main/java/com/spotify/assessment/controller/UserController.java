@@ -23,18 +23,20 @@ import com.spotify.assessment.security.CurrentUser;
 import com.spotify.assessment.security.UserPrincipal;
 import com.spotify.assessment.service.UserService;
 
+/**
+ * User controller for getting a user token for authentication to API, user profile and user transactions
+ * @author Tristan
+ *
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
-	@Autowired
-	private UserRepository userRepository;
-	
 	
 	
 	@Autowired 
 	private UserService userService;
 	
+	//user token for authentication
     @GetMapping("/token")
     @PreAuthorize("hasRole('ROLE_USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
@@ -42,6 +44,7 @@ public class UserController {
         return userSummary;
     }
 	
+    //user profile
 	@GetMapping("/user")
 	public UserProfile getUser(@CurrentUser UserPrincipal currentUser){
 
@@ -50,6 +53,8 @@ public class UserController {
 	
 		 return userProfile;
 	}	 
+	
+	//user transactions
 	@GetMapping("/user/transactions")
 	public Collection<TransactionResponse> getUserTransactions(@CurrentUser UserPrincipal currentUser) {
 		User user = userService.findById(currentUser.getUserId());

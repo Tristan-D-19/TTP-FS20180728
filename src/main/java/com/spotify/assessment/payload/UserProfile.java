@@ -1,13 +1,15 @@
 package com.spotify.assessment.payload;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import com.spotify.assessment.domain.Account;
 import com.spotify.assessment.domain.Stock;
 
+/**
+ * User profile/portfolio response to display users balance, and stocks
+ * @author Tristan
+ *
+ */
 public class UserProfile {
     private Long id;
    

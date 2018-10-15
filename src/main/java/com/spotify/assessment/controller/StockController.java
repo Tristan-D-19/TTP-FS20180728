@@ -1,22 +1,12 @@
 package com.spotify.assessment.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +29,12 @@ import com.spotify.assessment.service.StockService;
 import com.spotify.assessment.service.UserService;
 import com.spotify.assessment.validator.AppConstants;
 
+
+/**
+ * Stock controller for getting all stocks and buying a stock.
+ * @author Tristan
+ *
+ */
 @RestController
 @RequestMapping("/api/stocks")
 public class StockController {
@@ -55,16 +51,9 @@ public class StockController {
 	private StockRepository stockRepository;
 	
 	@GetMapping(value ="/all")
-	public PagedResponse<StockResponse> getAllStocks(Pageable pageable, @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+	public PagedResponse<StockResponse> getAllStocks(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size){
 
-//		List<Stock> stocks = stockRepository.findAll();
-//		Page <Stock> stockPage = stockRepository.findAll(pageable);
-//		List<StockResponse> stockResponses = new ArrayList<StockResponse>();
-//
-//		stocks.stream().forEach(stock -> {
-//			stockResponses.add(new StockResponse(stock));
-//			});
 	return stockService.getStocks(page, size);
 	}
 	
@@ -78,6 +67,7 @@ public class StockController {
 		return ResponseEntity.ok().body(stock);
 	}
 	
+	//purchase a stock
 	@PostMapping("/buy")
 	public ResponseEntity<?> buyStock(@Valid @RequestBody StockPurchaseRequest stockPurchaseRequest, @CurrentUser UserPrincipal currentUser){
 		

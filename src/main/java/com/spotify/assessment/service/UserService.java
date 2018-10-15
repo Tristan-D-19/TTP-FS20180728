@@ -22,7 +22,12 @@ import com.spotify.assessment.domain.Transaction;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.payload.UserProfile;
 import com.spotify.assessment.repositories.*;
-
+/**
+ * User service is used to handle all user actions, creating users, update users,
+ * get user transactions, buy stock, and get the users profile/portfolio.
+ * @author Tristan
+ *
+ */
 @Service
 @Transactional
 public class UserService {
@@ -116,7 +121,7 @@ public class UserService {
 		if((balance- amount) < 0 || balance <= 0)
 			return false;
 		
-		Transaction transaction = new Transaction("BUY", shares, stock.getLastSalePrice(), stock.getSymbol(), account);
+		Transaction transaction = new Transaction("BUY", volume, stock.getLastSalePrice(), stock.getSymbol(), account);
 		transaction = transactionRepository.save(transaction);
 		balance = balance - amount;
 		account.setBalance(balance);
@@ -160,6 +165,15 @@ public class UserService {
 		User user = userRepository.findById(userId).orElse(null);
 		Account account = accountRepository.findByUser(user);
 		Collection<Stock> stocks = account.getStocks();
+		Collection<Transaction> transactions = account.getTransactions();
+		HashMap<String, Transaction> tMap = new HashMap<String, Transaction>();
+		transactions.stream().forEach(t-> {
+			tMap.put(t.getSymbol(), t ); 
+			});
+		stocks.stream().forEach(stock -> 
+		{
+			stock.setVolume(tMap.get(stock.getSymbol()).getShares());
+		});
 		UserProfile userAccount = new UserProfile(user.getUserId(), user.getName(), user.getEmail(), stocks, account.getBalance());
 		return userAccount;
 	}

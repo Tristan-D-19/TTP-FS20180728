@@ -5,10 +5,14 @@ import org.springframework.stereotype.Repository;
 
 import com.spotify.assessment.domain.Role;
 import java.lang.String;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
+/**
+ *  Repository for user roles
+ * @author Tristan
+ *
+ */
 @Repository
 @Transactional
 public interface RoleRepository extends JpaRepository<Role, Long> {

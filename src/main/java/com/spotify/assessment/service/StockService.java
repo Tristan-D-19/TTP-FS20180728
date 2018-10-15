@@ -19,7 +19,7 @@ import com.spotify.assessment.repositories.StockRepository;
 import com.spotify.assessment.validator.AppConstants;
 
 /**
- * Service to retrieve stocks from DB.
+ * Service to retrieve stocks from DB. Handles paging request
  * @author Tristan
  *
  */

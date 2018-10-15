@@ -1,5 +1,10 @@
 package com.spotify.assessment.payload;
 
+/**
+ * User summary to display pertinent user information the client server
+ * @author Tristan
+ *
+ */
 public class UserSummary {
     private Long id;
     private String email;

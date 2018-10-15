@@ -1,48 +1,40 @@
 package com.spotify.assessment.controller;
 
 import java.net.URI;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spotify.assessment.domain.User;
 import com.spotify.assessment.payload.ApiResponse;
 import com.spotify.assessment.payload.JwtAuthenticationResponse;
+import com.spotify.assessment.payload.LoginRequest;
+import com.spotify.assessment.payload.RegisterRequest;
 import com.spotify.assessment.repositories.UserRepository;
 import com.spotify.assessment.security.JwtTokenProvider;
 import com.spotify.assessment.service.UserService;
-import com.spotify.assessment.validator.LoginRequest;
-import com.spotify.assessment.validator.RegisterRequest;
 import com.spotify.assessment.validator.UserValidator;
 
 
-
+/**
+ * Authorization controller for handling user login and registration
+ * @author Tristan
+ *
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -53,8 +45,6 @@ public class AuthController {
 	@Autowired
 	private UserRepository userRepo;
 	
-	@Autowired 
-	private UserValidator userValidator;
 	
 	@Autowired
     private JwtTokenProvider tokenProvider;
@@ -90,12 +80,13 @@ public class AuthController {
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
-        SecurityContext sc = SecurityContextHolder.getContext();
+       
          
         User newUser = new User(registerRequest.getName(), registerRequest.getPassword(), registerRequest.getEmail());
         
             User result = userService.createNewUser(newUser);
             
+            //create user url
             URI location = ServletUriComponentsBuilder
                     .fromCurrentContextPath().path("/users/{id}")
                     .buildAndExpand(result.getUserId()).toUri();

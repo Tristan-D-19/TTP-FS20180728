@@ -28,9 +28,9 @@ const request = (options) => {
 export function getAllStocks(page, size) {
     page = page || 0;
     size = size || STOCK_LIST_SIZE;
-
+    console.log(page);
     return request({
-        url: API_BASE_URL + `/stocks/all?page=${page}&limit=${size}`,
+        url: API_BASE_URL + `/stocks/all?page=${page}&size=${size}`,
         method: 'GET'
     });
 }
@@ -86,11 +86,18 @@ export function getUserAccount(id){
     })
 }
 
-export function getUserTransactions(id) {
+export function getUserTransactions() {
    
     return request({
-        url: API_BASE_URL + "/users/" + id + "/transactions",
-        //  + "/polls?page=" + page + "&size=" + size,
+        url: API_BASE_URL + "/users/user/transactions",
         method: 'GET'
     });
+}
+
+export function check(symbol){
+
+    return request({
+        url: `https://api.iextrading.com/1.0/stock/${symbol}/quote`
+    , method: 'GET'
+    })
 }

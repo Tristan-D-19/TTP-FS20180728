@@ -1,6 +1,5 @@
 package com.spotify.assessment.domain;
 
-import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,13 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 

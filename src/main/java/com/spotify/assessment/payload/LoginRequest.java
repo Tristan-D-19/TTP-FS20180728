@@ -1,4 +1,4 @@
-package com.spotify.assessment.validator;
+package com.spotify.assessment.payload;
 
 import javax.validation.constraints.NotBlank;
 

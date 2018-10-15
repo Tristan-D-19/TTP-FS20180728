@@ -4,7 +4,7 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Bu
 import "./AppNavBar.css";
 
 
-
+// Authorized User navigation. Will only display once a user logs in. 
 export default class AuthorizedNav extends Component {
   constructor(props) {
     super(props);
@@ -16,13 +16,14 @@ export default class AuthorizedNav extends Component {
       logout: false
     };
   }
-
+//handles user log out
 handleLogout(){
   if(this.state.logout == true){
     this.props.onLogout()
   }
 }
 
+//toggle the nav bar
   toggleNavbar() {
     this.setState({
       collapsed: !this.state.collapsed,
@@ -32,11 +33,7 @@ handleLogout(){
   render() {
 
     const currentUser = this.props.currentUser;
-   
-    // portfolioButton = <PortfolioButton />;
-    // logoutButton = <LogoutButton onClick={this.props.onLogout}  />
-
-   
+ 
     return (
         <div>
       <Navbar color="light" light expand="md">

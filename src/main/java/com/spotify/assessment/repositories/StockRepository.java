@@ -9,8 +9,11 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.spotify.assessment.domain.Account;
-
+/**
+ * Repository to store stocks from the IEXtrading API
+ * @author Tristan
+ *
+ */
 @Repository
 @Transactional
 public interface StockRepository extends JpaRepository<Stock, Long> {

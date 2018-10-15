@@ -1,8 +1,5 @@
 package com.spotify.assessment.domain;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,15 +11,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.ManyToAny;
 
 import lombok.Data;
 
 
 /**
- * 
+ * This domain model represents a user's account to purchase stocks and manage user transactions
  * @author Tristan
- * This domain model represents a user's account to perform money transactions 
+ * 
  *
  */
 @Data

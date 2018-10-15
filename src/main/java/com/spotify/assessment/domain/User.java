@@ -1,6 +1,5 @@
 package com.spotify.assessment.domain;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -18,15 +17,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import lombok.ToString;
 
 
@@ -35,8 +31,8 @@ import lombok.ToString;
  *A user instance will be passed a name, password and email. 
  *This class also implements userDetails for use with spring security to keep track of users in the session. 
  *@author Tristan
-
  */
+
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {"account", "roles"})
@@ -71,7 +67,6 @@ public class User implements UserDetails {
 	private boolean enabled = true;
 	
 	@ManyToMany(cascade = {CascadeType.ALL})
-//    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 	
 	

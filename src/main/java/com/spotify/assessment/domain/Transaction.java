@@ -1,6 +1,5 @@
 package com.spotify.assessment.domain;
 
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,7 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
-
+/**
+ * Transaction class represents a user purchase of a stock
+ * @author Tristan
+ *
+ */
 @Data
 @Entity
 public class Transaction {

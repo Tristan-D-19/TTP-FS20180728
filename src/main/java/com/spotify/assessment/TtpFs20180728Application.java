@@ -6,15 +6,12 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.web.client.RestTemplate;
 
-import com.spotify.assessment.domain.Stock;
-import com.spotify.assessment.service.RestStockReader;
-
+//Main application 
 @SpringBootApplication
 @EnableWebSecurity
 public class TtpFs20180728Application {

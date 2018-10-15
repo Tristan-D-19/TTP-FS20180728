@@ -10,6 +10,11 @@ import java.lang.String;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * User repository for storing users in the DB
+ * @author Tristan
+ *
+ */
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {

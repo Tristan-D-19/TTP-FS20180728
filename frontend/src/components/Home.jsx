@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Home.css'
 import {  Jumbotron } from 'reactstrap';
+
+//Home component to display welcome page to the user
 class Home extends Component {
 
   render() {

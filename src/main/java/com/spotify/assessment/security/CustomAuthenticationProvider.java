@@ -1,8 +1,6 @@
-package com.spotify.assessment.service;
+package com.spotify.assessment.security;
 
 
-
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -26,7 +23,11 @@ import com.spotify.assessment.domain.User;
 import com.spotify.assessment.repositories.UserRepository;
 
 
-
+/**
+ * Custom user authentication manager, used by spring security to authenticate a user
+ * @author Tristan
+ *
+ */
 @Component("authManager")
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     
@@ -51,7 +52,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if(Objects.nonNull(user)) {
         	 Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
-        	 System.out.println("authenticating this shit!");
 
              if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
                //password is a match
@@ -71,13 +71,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         else {
              logger.info("Unsuccessful login attempt - user not found.");
              return null;
-           }
-        	
+           }       	
         	
 }
        
-
- 
     @Override
     public boolean supports(Class<?> auth) {
         return auth.equals(UsernamePasswordAuthenticationToken.class);

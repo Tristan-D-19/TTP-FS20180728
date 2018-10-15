@@ -1,5 +1,10 @@
 package com.spotify.assessment.payload;
 
+/**
+ * Api response to display messages to the client server
+ * @author Tristan
+ *
+ */
 public class ApiResponse {
     private Boolean success;
     private String message;

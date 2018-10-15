@@ -17,8 +17,13 @@ import com.spotify.assessment.repositories.RoleRepository;
 import com.spotify.assessment.repositories.StockRepository;
 import com.spotify.assessment.repositories.UserRepository;
 import com.spotify.assessment.service.RestStockReader;
-import com.spotify.assessment.service.UserService;
 
+
+/**
+ * Loads the Database with data, use this class to load stocks
+ * @author Tristan
+ *
+ */
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
@@ -44,7 +49,7 @@ public class DatabaseLoader implements CommandLineRunner {
 	@Override
 	public void run(String... strings) throws Exception {
 		
-		
+		//create user roles 
 		Role user = new Role("ROLE_USER", 0);
 		Role admin = new Role("ROLE_ADMIN", 1);
 		user = this.roleRepository.save(user);
@@ -52,7 +57,7 @@ public class DatabaseLoader implements CommandLineRunner {
 		
 		Set<User> nonAdminUsers = new HashSet<User>();
 		Set<User> adminUsers = new HashSet<User>();
-		
+		//create admin user and regular user
 		User adminUser = new User("Admin", "JaggedEdge", "admin@gmail.com");
 		User frodo = new User("Frodo Baggins", "LordOftheRing", "frodo@gmail.com");
 		
@@ -84,21 +89,21 @@ public class DatabaseLoader implements CommandLineRunner {
 		adminUser = this.userRepository.save(adminUser);
 		
 		
-		List<Stock> stocks = stockReader.executeRequest();
+//		List<Stock> stocks = stockReader.executeRequest();
 		
-		
+		List<Stock> stocks = new ArrayList<Stock>();
 				
-//				stocks.add(new Stock("AXP", 108.42, 38444));
-//				stocks.add(new Stock("VFMV", 0.0, 0));
-//				stocks.add(new Stock("NCNA", 129.93, 346));
-//				stocks.add(new Stock("ZBH", 75.58, 164));
-//				stocks.add(new Stock("VWOB", 200.46, 0));
-//				stocks.add(new Stock("HYDW", 0.0, 0));
-//				stocks.add(new Stock("QVM", 0.0, 0));
-//				stocks.add(new Stock("AXP", 86.2, 1358182 ));
-//				stocks.add(new Stock("HYG", 108.42, 34979));
-//				stocks.add(new Stock("SOR", 108.42, 3536));		
-//				stocks.add(new Stock("NXST", 108.42, 13796));
+				stocks.add(new Stock("AXP", 108.42, 38444));
+				stocks.add(new Stock("VFMV", 0.0, 0));
+				stocks.add(new Stock("NCNA", 129.93, 346));
+				stocks.add(new Stock("ZBH", 75.58, 164));
+				stocks.add(new Stock("VWOB", 200.46, 0));
+				stocks.add(new Stock("HYDW", 0.0, 0));
+				stocks.add(new Stock("QVM", 0.0, 0));
+				stocks.add(new Stock("AXP", 86.2, 1358182 ));
+				stocks.add(new Stock("HYG", 108.42, 34979));
+				stocks.add(new Stock("SOR", 108.42, 3536));		
+				stocks.add(new Stock("NXST", 108.42, 13796));
 						
 		stocks.stream().forEach(stock -> {
 			stockRepository.saveAndFlush(stock);

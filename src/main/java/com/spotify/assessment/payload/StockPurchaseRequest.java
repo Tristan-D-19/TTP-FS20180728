@@ -1,10 +1,14 @@
 package com.spotify.assessment.payload;
 
-
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+/**
+ * Stock purchase request for incoming stock purchase request 
+ * @author Tristan
+ *
+ */
 public class StockPurchaseRequest {
 
 		@NotBlank

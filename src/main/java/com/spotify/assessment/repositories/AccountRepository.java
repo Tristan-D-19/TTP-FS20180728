@@ -7,6 +7,11 @@ import com.spotify.assessment.domain.Stock;
 import com.spotify.assessment.domain.User;
 import java.util.List;
 
+/**
+ * Respository for user accounts
+ * @author Tristan
+ *
+ */
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	Account findByUser(User user);

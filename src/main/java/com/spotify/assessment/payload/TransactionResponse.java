@@ -2,6 +2,12 @@ package com.spotify.assessment.payload;
 
 import com.spotify.assessment.domain.Transaction;
 
+/**
+ * Transaction response to dislay only pertinent information needed for a user transaction
+ * @author Tristan
+ *
+ */
+
 public class TransactionResponse {
 
 	

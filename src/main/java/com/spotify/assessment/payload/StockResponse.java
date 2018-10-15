@@ -1,11 +1,12 @@
 package com.spotify.assessment.payload;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spotify.assessment.domain.Stock;
 
-import java.time.Instant;
-import java.util.List;
-
+/**
+ * Stock response to display only pertinent information needed for the client side server.
+ * @author Tristan
+ *
+ */
 public class StockResponse {
 
    

@@ -1,5 +1,10 @@
 package com.spotify.assessment.payload;
 
+/**
+ * JWT authentication for user access token
+ * @author Tristan
+ *
+ */
 public class JwtAuthenticationResponse {
     private String accessToken;
     private String tokenType = "Bearer";
