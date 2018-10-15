@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Jumbotron,  Form, Label, ControlLabel, FormGroup, FormControl, HelpBlock, Col } from 'react-bootstrap';
+import { Button, Jumbotron, Label, ControlLabel, FormGroup, FormControl, Col } from 'react-bootstrap';
 import './Register.css';
 import { register } from '../utils/APIHelper';
 import {  Redirect} from "react-router-dom";
@@ -48,7 +48,7 @@ export default class Register extends Component {
         password2, 
       } = this.state;
     this.setState({ submitted: true });
-    const password = (password1 == password2) ? password2: null;
+    const password = (password1 === password2) ? password2: null;
         if (name && email && password) {
        await register(name, email, password)
         .then(response => {  
@@ -77,10 +77,10 @@ pathname: '/register',
 state: { from: this.props.location }
 }}
 />
-        if (this.state.toLogin == true) {
+        if (this.state.toLogin === true) {
             return redirectToLogin
           }
-          if (this.state.reLoad == true) {
+          if (this.state.reLoad === true) {
             return redirectToRegister;
           } 
      return (

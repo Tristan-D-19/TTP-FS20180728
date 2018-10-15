@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Button, ButtonGroup, Grid, Container, Table, CheckBox, Form, Col, Row, Jumbotron, FormGroup, ControlLabel, Modal, ModalBody, ModalFooter, FormControl, Label} from 'react-bootstrap';
+import { ListGroup, ListGroupItem, Grid, Col, Row} from 'react-bootstrap';
 import { getUserTransactions } from '../utils/APIHelper';
 
 //Transaction component: Displays all of a users transactions, namely, stock purchases.
@@ -46,13 +46,13 @@ export default class Profile extends Component {
   return(
   <Grid>
       <h2>Transactions</h2>
-      <Row className="show-grid">
+      
           <Col id="user-transactions">
           <ListGroup>
             {transactionList}
         </ListGroup>
           </Col>     
-      </Row>
+     
   </Grid>);
     }
   }

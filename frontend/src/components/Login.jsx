@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Alert, Button, Jumbotron,  Form, Label, ControlLabel, FormGroup, FormControl, HelpBlock, Col } from 'react-bootstrap';
+import { Button, Jumbotron, Label, ControlLabel, FormGroup, FormControl, Col } from 'react-bootstrap';
 import { login } from '../utils/APIHelper';
 import './Login.css';
 import { ACCESS_TOKEN } from '../constants';

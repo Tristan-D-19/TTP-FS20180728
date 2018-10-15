@@ -29,7 +29,6 @@ public class RestStockReader {
 
 	@PostConstruct
 	public List<Stock> executeRequest() {
-		int i = 0;
 		restTemplate = new RestTemplate();
 		
 		ParameterizedTypeReference<List<Stock>> listOfStock = new ParameterizedTypeReference<List<Stock>>() {};

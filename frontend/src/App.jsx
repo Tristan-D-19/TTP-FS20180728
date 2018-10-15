@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import './App.css';
+// import './App.css';
 import { getCurrentUser, getUserProfile } from './utils/APIHelper';
 import Home from './components/Home';
-import { BrowserRouter as Route, Switch, Redirect, withRouter} from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter} from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom'
 import StockList from './components/StockList';
 import AuthorizedNav from './components/AuthorizedNav';
 import UnauthorizeddNav from './components/UnauthorizedNav';
@@ -14,7 +15,6 @@ import NotFound from './components/NotFound';
 import {ACCESS_TOKEN} from  './constants';
 import Transactions from './components/Transactions'
 
-//Front end app 
 class App extends Component {
 
   constructor(props) {
@@ -115,6 +115,7 @@ class App extends Component {
   render() {
     let nav; 
     const user = this.state.currentUser;
+    console.log(user)
     const authenticated = this.state.isAuthenticated;
     if(this.state.isAuthenticated){
       nav = <AuthorizedNav 
@@ -132,17 +133,15 @@ class App extends Component {
       <div className="App-Header"> 
       {nav}
       </div>
+
       <Switch>
+
         <Route path='/' exact={true} component={Home}/> 
         <PrivateRoute path="/stocks" component={StockList} isAuthenticated={this.state.isAuthenticated}  currentUser={user} handleLogout={this.handleLogout}></PrivateRoute> 
- 
         <Route path="/login" 
                   render={(props) => <Login isAuthenticated={this.state.isAuthenticated} onLogin={this.handleLogin} setCurrentUser={this.setCurrentUser} {...props} />}></Route>
-
          <Route path="/register" 
                   render={(props) => <Register onRegister={this.handleRegister} {...props} />}></Route>          
-        <Route exact path ="/register" component={Register}/>
-
         <PrivateRoute exact path="/user/portfolio" 
                   component={Portfolio} loadProfile={this.loadUserProfile} isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} >
         </PrivateRoute>
@@ -150,9 +149,10 @@ class App extends Component {
         component={Transactions} isAuthenticated={authenticated} currentUser={this.state.currentUser} >
         </PrivateRoute>
         <Route path="/logout" component={Home}></Route>
-                <Route component={NotFound}></Route>      
+        <Route component={NotFound}></Route>      
       </Switch>   
-    </div>);
+    </div>
+    );
   }
 }
 

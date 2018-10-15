@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button, Col } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import "./AppNavBar.css";
 
 
@@ -18,7 +18,7 @@ export default class AuthorizedNav extends Component {
   }
 //handles user log out
 handleLogout(){
-  if(this.state.logout == true){
+  if(this.state.logout === true){
     this.props.onLogout()
   }
 }

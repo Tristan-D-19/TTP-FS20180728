@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button, Col } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink} from 'reactstrap';
 import "./AppNavBar.css";
 
 //Unauthorized component: displays when a user is unauthorized
@@ -18,7 +18,7 @@ export default class UnauthorizedNav extends Component {
   }
 
 handleLogout(){
-  if(this.state.logout == true){
+  if(this.state.logout === true){
     this.props.onLogout()
   }
 }
