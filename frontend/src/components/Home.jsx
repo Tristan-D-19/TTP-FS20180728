@@ -8,7 +8,7 @@ class Home extends Component {
   render() {
     return (
       <div className="Home"> 
-      test
+  
         <Jumbotron> Welcome to the stock trade! </Jumbotron>
       </div>   
     );
